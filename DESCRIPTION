@@ -1,0 +1,29 @@
+Package: wsgcolr
+Title: Columbia River White Sturgeon Analaysis
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Seb",
+           family = "Dalgarno",
+           role = c("aut", "cre"),
+           email = "dalgarno@unbc.ca",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Manipulate, visualize and analyze Columbia River White Sturgeon telemetry and capture-recapture data.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    chk,
+    dplyr,
+    ggplot2,
+    glue,
+    magrittr,
+    patchwork,
+    sf,
+    ggspatial,
+    tidyr,
+    lubridate
