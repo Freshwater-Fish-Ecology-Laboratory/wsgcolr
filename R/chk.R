@@ -77,7 +77,7 @@ chk_detection_ratio <- function(detection_ratio){
 #' @export
 
 chk_deployment <- function(deployment){
-  chk_dat(deployment, names = c("date_deployment", "date_last_download", "array", "array_rkm", "station"))
+  chk_dat(deployment, names = c("date_deployment", "date_last_download", "array", "array_rkm", "station_id"))
 }
 
 #' Check station data

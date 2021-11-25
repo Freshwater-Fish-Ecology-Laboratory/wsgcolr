@@ -23,7 +23,8 @@ plot_deployment_spatial <- function(station, river){
 
   ggplot() +
     geom_sf(data = river, lwd = 0.1, color = "black") +
-    geom_sf(data = station, aes(color = array), show.legend = FALSE) +
+    geom_sf(data = station, aes(color = array_color), show.legend = FALSE) +
+    scale_color_identity() +
     coord_sf(xlim = xlim, ylim = ylim) +
     ggspatial::annotation_scale(height = unit(0.09, "cm"), text_cex = 0.5) +
     theme(axis.text.x = element_blank(),
@@ -54,8 +55,9 @@ plot_deployment_temporal <- function(deployment, detection = NULL){
 
   gp <-  ggplot(data = deployment) +
     geom_segment(aes(x = date_deployment, y = station_id,
-                     xend = date_last_download, yend = station_id, color = array),
+                     xend = date_last_download, yend = station_id, color = array_color),
                  alpha = 1, size = 3.8) +
+    scale_color_identity() +
     geom_point(aes(x = date_deployment, y = station_id), pch = '|', lwd = 2) +
     geom_point(aes(x = date_last_download, y = station_id), pch = '|', lwd = 2) +
     labs(x = "Date", y = "Station", color = "Array") +
