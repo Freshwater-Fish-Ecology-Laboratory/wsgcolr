@@ -30,8 +30,8 @@ plot_detection_path <- function(detection_event, deployment, reference_rkm,
   chk_length(lims_y, 2L)
 
   ggplot(data = detection_event, aes(x = timestep, y = !! sym(receiver_group_rkm))) +
-    geom_segment(data = deployment, aes(x = date_deployment, y = !! sym(receiver_group_rkm),
-                                        xend = date_last_download, yend = !! sym(receiver_group_rkm)),
+    geom_segment(data = deployment, aes(x = deployment_period_start, y = !! sym(receiver_group_rkm),
+                                        xend = deployment_preiod_end, yend = !! sym(receiver_group_rkm)),
                  alpha = 1, size = 3.8, color = "#EDEDED") +
     geom_line(aes(group = path)) +
     geom_point(aes(color = !! sym(receiver_group)), size = 1.3) +

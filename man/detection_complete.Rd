@@ -6,8 +6,8 @@
 \usage{
 detection_complete(
   detection_timestep,
-  timestep = "day",
-  receiver_group = "array"
+  timestep = "week",
+  receiver_group = "receiver_group"
 )
 }
 \arguments{

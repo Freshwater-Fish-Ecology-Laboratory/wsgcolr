@@ -1,3 +1,13 @@
-test_that("multiplication works", {
-  expect_equal(2 * 2, 4)
+test_that("plotting funs work", {
+  con <- db_connect()
+  station <- db_read_station(con)
+  river <- db_read(con, "spatial.canada_reach", sf = TRUE)
+  deployment <- db_read_deployment_period(con)
+    
+  wsgcolr::plot_deployment(deployment, station = station, 
+                           river = river, station_col = "station_name")
+  
+  wsgcolr::plot_deployment(con, detection = TRUE)
+  
+  
 })

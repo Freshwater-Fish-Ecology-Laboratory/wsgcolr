@@ -2,28 +2,42 @@
 % Please edit documentation in R/plot-deployment.R
 \name{plot_deployment}
 \alias{plot_deployment}
-\title{Plot receiver coverage}
+\alias{plot_deployment.data.frame}
+\alias{plot_deployment.PqConnection}
+\title{Plot Deployment}
 \usage{
-plot_deployment(station, river, deployment, detection = NULL)
+plot_deployment(x, ...)
+
+\method{plot_deployment}{data.frame}(deployment, station, river, detection = NULL, station_col)
+
+\method{plot_deployment}{PqConnection}(con, detection = FALSE)
 }
 \arguments{
+\item{deployment}{A tibble of the receiver deployments containing columns 'date_deployment', 'date_last_download', 'station', 'array', 'array_rkm'.}
+
 \item{station}{A sf object of the station point locations containing column 'array' (for color coding). Geometry column must inherit class 'sfc_POINT' or 'sfc_MULTIPOINT'.}
 
 \item{river}{A sf object of the river polygon. Geometry column must inherit class 'sfc_POLYGON' or 'sfc_MULTIPOLYGON'.}
 
-\item{deployment}{A tibble of the receiver deployments containing columns 'date_deployment', 'date_last_download', 'station', 'array', 'array_rkm'.}
-
 \item{detection}{A tibble of raw detection data containing columns 'transmitter_id' and 'datetime_utc'.}
 }
-\value{
-An object of class 'ggplot'.
-}
 \description{
-Plot combination of station map and receiver deployment over time.
+Generic function to plot the deployment periods.
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{data.frame}: method to plot deployment periods from data.frames
+
+\item \code{PqConnection}: method to plot deployments fron connection object
+}}
+
 \examples{
 
 \dontrun{
 plot_deployment(station, river, deployment)
+}
+
+\dontrun{
+plot_deployment(con)
 }
 }

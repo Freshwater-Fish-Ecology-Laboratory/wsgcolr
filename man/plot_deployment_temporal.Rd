@@ -4,7 +4,11 @@
 \alias{plot_deployment_temporal}
 \title{Plot deployment}
 \usage{
-plot_deployment_temporal(deployment, detection = NULL)
+plot_deployment_temporal(
+  deployment,
+  detection = NULL,
+  station_col = "station_name"
+)
 }
 \arguments{
 \item{deployment}{A tibble of the receiver deployments containing columns 'date_deployment', 'date_last_download', 'station', 'array', 'array_rkm'.}

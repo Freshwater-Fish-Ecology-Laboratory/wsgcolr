@@ -4,7 +4,7 @@
 \alias{detection_ratio}
 \title{Detection ratio data}
 \usage{
-detection_ratio(detection_complete, receiver_group = "array")
+detection_ratio(detection_complete, receiver_group = "receiver_group")
 }
 \arguments{
 \item{detection_complete}{A tibble of complete detection data returned from \code{wsgcolr::detection_complete()} containing columns 'transmitter_id' and 'timestep'.}

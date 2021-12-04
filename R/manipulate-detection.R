@@ -6,7 +6,7 @@
 #' @return A modified tibble of the detection data.
 #'
 #' @export
-detection_timestep <- function(detection, timestep = "day", receiver_group = "array"){
+detection_timestep <- function(detection, timestep = "week", receiver_group = "receiver_group"){
 
   chk_detection(detection)
   chk_timestep(timestep)
@@ -14,13 +14,12 @@ detection_timestep <- function(detection, timestep = "day", receiver_group = "ar
 
   detection %>%
     mutate(timestep = as.Date(lubridate::floor_date(datetime_utc, unit = timestep))) %>%
-    group_by(transmitter_id, timestep, !! sym(receiver_group)) %>%
-    tally() %>%
+    group_by(transmitter, timestep, !! sym(receiver_group)) %>%
+    summarise(ndetection = n()) %>%
     ungroup() %>%
-    group_by(transmitter_id, timestep) %>%
-    slice_max(n) %>%
-    ungroup() %>%
-    select(-n)
+    group_by(transmitter, timestep) %>%
+    slice_max(ndetection) %>%
+    ungroup() 
 }
 
 #' Assign detections to events and paths
@@ -32,7 +31,7 @@ detection_timestep <- function(detection, timestep = "day", receiver_group = "ar
 #' @return A modified tibble of the detection events and paths.
 #'
 #' @export
-detection_event <- function(detection_timestep, receiver_group = "array",
+detection_event <- function(detection_timestep, receiver_group = "receiver_group",
                             max_absence = 96, squash = FALSE){
 
   chk_detection_timestep(detection_timestep)
@@ -41,8 +40,8 @@ detection_event <- function(detection_timestep, receiver_group = "array",
   chk_flag(squash)
 
   x <- detection_timestep %>%
-    group_by(transmitter_id) %>%
-    arrange(transmitter_id, timestep, !! sym(receiver_group)) %>%
+    group_by(transmitter) %>%
+    arrange(transmitter, timestep, !! sym(receiver_group)) %>%
     mutate(duration = as.numeric(difftime(timestep, lag(timestep), units = c("hours"))),
            duration = if_else(is.na(duration), 0, duration),
            new_event = duration > max_absence | lag(!! sym(receiver_group)) != !! sym(receiver_group),
@@ -52,11 +51,11 @@ detection_event <- function(detection_timestep, receiver_group = "array",
     mutate(event = cumsum(new_event),
            path = cumsum(new_path) + 1) %>%
     ungroup() %>%
-    arrange(transmitter_id, event) %>%
+    arrange(transmitter, event) %>%
     select(-new_path, -new_event, -duration)
   if(squash){
     x <- x %>%
-      group_by(transmitter_id, !! sym(receiver_group), event) %>%
+      group_by(transmitter, !! sym(receiver_group), event) %>%
       arrange(timestep) %>%
       slice(c(1, n())) %>%
       ungroup()
@@ -73,7 +72,7 @@ detection_event <- function(detection_timestep, receiver_group = "array",
 #' @return A modified tibble of the complete detection data.
 #'
 #' @export
-detection_complete <- function(detection_timestep, timestep = "day", receiver_group = "array"){
+detection_complete <- function(detection_timestep, timestep = "week", receiver_group = "receiver_group"){
 
   chk_detection_timestep(detection_timestep)
   chk_timestep(timestep)
@@ -84,7 +83,7 @@ detection_complete <- function(detection_timestep, timestep = "day", receiver_gr
   detection_timestep %>%
     arrange(transmitter_id, timestep, array) %>%
     tidyr::complete(timestep = timestep_range,
-                    !! sym(receiver_group), transmitter_id,
+                    !! sym(receiver_group), transmitter,
                     fill = list(present = 0))
 }
 
@@ -97,7 +96,7 @@ detection_complete <- function(detection_timestep, timestep = "day", receiver_gr
 #'
 #' @export
 
-detection_ratio <- function(detection_complete, receiver_group = "array"){
+detection_ratio <- function(detection_complete, receiver_group = "receiver_group"){
 
   chk_detection_complete(detection_complete)
   chk_string(receiver_group)

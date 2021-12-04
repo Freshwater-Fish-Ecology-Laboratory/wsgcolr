@@ -6,7 +6,7 @@
 \usage{
 detection_event(
   detection_timestep,
-  receiver_group = "array",
+  receiver_group = "receiver_group",
   max_absence = 96,
   squash = FALSE
 )

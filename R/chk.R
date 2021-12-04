@@ -22,7 +22,7 @@ chk_timestep <- function(timestep){
 #' @export
 
 chk_detection_event <- function(detection_event){
-  chk_dat(detection_event, names =  c("transmitter_id", "timestep", "path", "event"))
+  chk_dat(detection_event, names =  c("transmitter", "timestep", "path", "event"))
 }
 
 #' Check detection timestep data
@@ -33,7 +33,7 @@ chk_detection_event <- function(detection_event){
 #' @export
 
 chk_detection_timestep <- function(detection_timestep){
-    chk_dat(detection_timestep ,names =  c("transmitter_id", "timestep"))
+    chk_dat(detection_timestep ,names =  c("transmitter", "timestep"))
 }
 
 #' Check detection data
@@ -44,7 +44,7 @@ chk_detection_timestep <- function(detection_timestep){
 #' @export
 
 chk_detection <- function(detection){
-  chk_dat(detection, names =  c("transmitter_id"))
+  chk_dat(detection, names =  c("transmitter"))
 }
 
 #' Check complete detection data
@@ -55,7 +55,7 @@ chk_detection <- function(detection){
 #' @export
 
 chk_detection_complete <- function(detection_complete){
-  chk_dat(detection_complete, names =  c("transmitter_id", "timestep", "present"))
+  chk_dat(detection_complete, names =  c("transmitter", "timestep", "present"))
 }
 
 #' Check detection ratio data
@@ -77,7 +77,7 @@ chk_detection_ratio <- function(detection_ratio){
 #' @export
 
 chk_deployment <- function(deployment){
-  chk_dat(deployment, names = c("date_deployment", "date_last_download", "array", "array_rkm", "station_id"))
+  chk_dat(deployment, names = c("date_period_start", "date_period_end", "station_id"))
 }
 
 #' Check station data
@@ -89,7 +89,7 @@ chk_deployment <- function(deployment){
 
 chk_station <- function(station){
   chk_is(station, "sf")
-  check_names(station, names = c("array"))
+  check_names(station, names = c("receiver_group"))
   chkor(chk_is(sf::st_geometry(station), "sfc_POINT"), chk_is(sf::st_geometry(station), "sfc_MULTIPOINT"))
 }
 

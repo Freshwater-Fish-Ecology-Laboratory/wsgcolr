@@ -4,7 +4,11 @@
 \alias{detection_timestep}
 \title{Aggregate detection by timestep}
 \usage{
-detection_timestep(detection, timestep = "day", receiver_group = "array")
+detection_timestep(
+  detection,
+  timestep = "week",
+  receiver_group = "receiver_group"
+)
 }
 \arguments{
 \item{detection}{A tibble of raw detection data containing columns 'transmitter_id' and 'datetime_utc'.}
