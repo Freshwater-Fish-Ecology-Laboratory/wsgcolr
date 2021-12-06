@@ -4,7 +4,7 @@
 \alias{db_read_deployment_period}
 \title{Read detection_tidy_weekly View}
 \usage{
-db_read_deployment_period(conn)
+db_read_deployment_period(con)
 }
 \value{
 A tibble of the summarized detection data.

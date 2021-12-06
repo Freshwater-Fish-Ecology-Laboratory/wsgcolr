@@ -4,7 +4,7 @@
 \alias{db_read}
 \title{Read table from database connection}
 \usage{
-db_read(conn, table, sf = FALSE)
+db_read(con, table, sf = FALSE, collect = TRUE)
 }
 \value{
 A data.frame of the data.

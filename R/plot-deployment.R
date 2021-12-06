@@ -27,7 +27,6 @@ plot_deployment_spatial <- function(station, river){
 
   chk_station(station)
   chk_river(river)
-  
   station <- station %>% sf::st_transform(sf::st_crs(river))
 
   bbox <- sf::st_bbox(station)
@@ -130,15 +129,13 @@ plot_deployment.PqConnection <- function(con, detection = FALSE){
   
   detection_station <- NULL
   if(detection){
-    detection <-  db_read_detection_simple(con)
+    detection_station <-  db_read_detection_simple(con)
   }
 
-  gp_temp <- plot_deployment_temporal(deployment = deployment,
-                                   detection = detection,
-                                   station_col = "station_name")
-  gp_spat <- plot_deployment_spatial(station = station,
-                             river = river)
-
-  patchwork::wrap_plots(gp_temp, gp_spat)
+  plot_deployment(deployment = deployment,
+                  station = station,
+                  river = river,
+                  detection = detection_station,
+                  station_col = "station_name")
 
 }

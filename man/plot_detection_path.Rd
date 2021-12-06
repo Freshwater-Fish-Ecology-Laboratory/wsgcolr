@@ -2,16 +2,28 @@
 % Please edit documentation in R/plot-detection.R
 \name{plot_detection_path}
 \alias{plot_detection_path}
-\title{Plot detection paths}
+\alias{plot_detection_path.data.frame}
+\alias{plot_detection_path.PqConnection}
+\title{Plot Detection Path}
 \usage{
-plot_detection_path(
+plot_detection_path(x, ...)
+
+\method{plot_detection_path}{data.frame}(
   detection_event,
   deployment,
-  reference_rkm,
-  receiver_group,
-  receiver_group_rkm,
-  lims_x,
-  lims_y
+  reference_rkm = reference_rkms(),
+  receiver_group = "receiver_group",
+  receiver_group_rkm = "receiver_group_rkm",
+  lims_x = range(detection_event$timestep),
+  lims_y = range(detection_event$receiver_group_rkm)
+)
+
+\method{plot_detection_path}{PqConnection}(
+  con,
+  transmitter_id,
+  max_absence = 96,
+  lims_x = c(as.Date("2010-01-01"), as.Date("2020-01-01")),
+  lims_y = c(0, 56)
 )
 }
 \arguments{
@@ -28,17 +40,33 @@ plot_detection_path(
 \item{lims_x}{A vector of class 'Date' containing x-axis limits.}
 
 \item{lims_y}{A vector of the numeric y-axis limits.}
+
+\item{max_absence}{A number of the maximum hours without detection for new event to occur.}
 }
 \value{
 An object of class 'ggplot'.
+
+An object of class 'ggplot'.
 }
 \description{
-Plot Columbia River White Sturgeon movement paths from VR2 receiver detection data.
+Generic function to plot the detection paths.
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{data.frame}: method to plot detection paths from data.frames
+
+\item \code{PqConnection}: method to plot detection paths from data.frames
+}}
+
 \examples{
 \dontrun{
 lims_x = c(min(deployment$date_deployment), max(deployment$date_last_download))
 lims_y = c(0, 56)
 plot_detection_path(detection, deployment, reference_rkm)
+}
+\dontrun{
+lims_x = c(min(deployment$date_deployment), max(deployment$date_last_download))
+lims_y = c(0, 56)
+plot_detection_path(con, transmitter_id = "A69-1303-10060", lims_x = lims_x, lims_y = lims_y)
 }
 }

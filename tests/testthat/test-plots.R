@@ -9,5 +9,7 @@ test_that("plotting funs work", {
   
   wsgcolr::plot_deployment(con, detection = TRUE)
   
+  wsgcolr::plot_detection_path(con)
+  
   
 })

@@ -4,7 +4,7 @@
 \alias{db_read_station}
 \title{Read detection_tidy_weekly View}
 \usage{
-db_read_station(conn)
+db_read_station(con, sf = TRUE)
 }
 \value{
 A tibble of the summarized detection data.

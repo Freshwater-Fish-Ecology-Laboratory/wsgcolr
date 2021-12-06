@@ -52,7 +52,8 @@ detection_event <- function(detection_timestep, receiver_group = "receiver_group
            path = cumsum(new_path) + 1) %>%
     ungroup() %>%
     arrange(transmitter, event) %>%
-    select(-new_path, -new_event, -duration)
+    select(-new_path, -new_event, -duration) %>%
+    mutate(timestep = as.Date(timestep))
   if(squash){
     x <- x %>%
       group_by(transmitter, !! sym(receiver_group), event) %>%
@@ -81,10 +82,11 @@ detection_complete <- function(detection_timestep, timestep = "week", receiver_g
   timestep_range <- seq.Date(min(detection_timestep$timestep), max(detection_timestep$timestep), by = timestep)
   detection_timestep$present <- 1
   detection_timestep %>%
-    arrange(transmitter_id, timestep, array) %>%
+    arrange(transmitter, timestep, receiver_group) %>%
     tidyr::complete(timestep = timestep_range,
-                    !! sym(receiver_group), transmitter,
-                    fill = list(present = 0))
+                    receiver_group, transmitter,
+                    fill = list(present = 0)) %>%
+    select(transmitter, receiver_group, timestep, present)
 }
 
 #' Detection ratio data
