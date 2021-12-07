@@ -1,4 +1,10 @@
-write_detection <- function(file, con, clean = TRUE){
+#' Write raw VUE detection csv export to db
+#'
+#' @inheritParams params
+#' @return The modified database
+#'
+#' @export
+db_write_detection <- function(con, file, clean = TRUE){
   
   col_types <- "Tcccccccnncc"
   x <- readr::read_csv(file, col_types = col_types)
@@ -25,26 +31,44 @@ write_detection <- function(file, con, clean = TRUE){
   
   x$file <- basename(file)
   
-  db_write(con = conn, schema = "telemetry", table = "detection", data = x)
+  db_write(con = con, table = "telemetry.detection", data = x)
   
 }
 
-write_transmitter <- function(file, con){
+#' Write transmitter csv file to db
+#'
+#' @inheritParams params
+#' @return The modified database
+#'
+#' @export
+db_write_transmitter <- function(file, con){
   col_types <- "ccccnnnccinnnccccTTc"
   x <- readr::read_csv(file, col_types = col_types)
-  db_write(con = conn, schema = "telemetry", table = "transmitter", data = x)
+  db_write(con = conn, table = "telemetry.transmitter", data = x)
 }
 
-write_receiver <- function(file, con){
+#' Write receiver csv to db
+#'
+#' @inheritParams params
+#' @return The modified database
+#'
+#' @export
+db_write_receiver <- function(file, con){
   col_types <- "cc"
   x <- readr::read_csv(file, col_types = col_types)
-  db_write(con = conn, schema = "telemetry", table = "receiver", data = x)
+  db_write(con = conn, table = "telemetry.receiver", data = x)
 }
 
-write_deployment <- function(file, con){
+#' Write deployment csv to db
+#'
+#' @inheritParams params
+#' @return The modified database
+#'
+#' @export
+db_write_deployment <- function(file, con){
   col_types <- "ccTcccc"
   x <- readr::read_csv(file, col_types = col_types)
-  db_write(con = conn, schema = "telemetry", table = "deployment", data = x)
+  db_write(con = conn, table = "telemetry.deployment", data = x)
 }
 
 
