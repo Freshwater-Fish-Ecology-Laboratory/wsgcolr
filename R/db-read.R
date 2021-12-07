@@ -82,6 +82,8 @@ db_read_detection_tidy <- function(con, timestep = "week", transmitter_id = NULL
   }
   
   x %>%
+    select(transmitter, receiver_group, timestep, ndetects, pittag_id, tag_insertion_date,
+           forklength_cm, weight_kg, sex, receiver_group_rkm, receiver_group_flow_zone) %>%
     collect() %>%
     mutate(receiver_group = forcats::fct_rev(forcats::fct_reorder(receiver_group, receiver_group_rkm)))
 }
