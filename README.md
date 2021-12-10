@@ -6,8 +6,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-Functions to facilitate manipulation, visualization and analysis of
-Columbia River White Sturgeon telemetry and capture-recapture data.
+Functions to facilitate working with White Sturgeon Columbia River acoustic telemetry and capture-recapture data.
 
 ## Installation
 
