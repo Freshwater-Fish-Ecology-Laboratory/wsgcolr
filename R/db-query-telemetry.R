@@ -13,43 +13,44 @@ db_query_deployment_period <- function(con, collect = TRUE){
   
   x <- deployment %>%
     left_join(receiver, c("receiver" = "receiver_number")) %>%
-    filter(battery_dead) %>%
+    filter(.data$battery_dead) %>%
     ### get receiver id
     ### get last detection
-    left_join(select(detection, receiver, datetime_utc), by = c("receiver_id" = "receiver")) %>%
-    filter(as.Date(datetime_utc) <= date_deployment) %>%
-    group_by(id) %>%
-    arrange(datetime_utc) %>%
-    summarise(last_detection = as.Date(max(datetime_utc, na.rm = TRUE))) %>%
+    left_join(select(detection, .data$receiver, .data$datetime_utc), by = c("receiver_id" = "receiver")) %>%
+    mutate(datetime_pst = timezone("Etc/GMT+8", .data$datetime_utc)) %>%
+    filter(as.Date(.data$datetime_pst) <= .data$date_deployment) %>%
+    group_by(.data$id) %>%
+    arrange(.data$datetime_pst) %>%
+    summarise(last_detection = as.Date(max(.data$datetime_pst, na.rm = TRUE))) %>%
     ungroup() %>%
     right_join(deployment, "id") %>%
-    filter(activity %in% c("deploy", "unknown") | (download | is.na(download))) %>%
-    group_by(station_id, receiver) %>%
-    dbplyr::window_order(date_deployment) %>%
-    mutate(date_period_start = date_deployment,
+    filter(.data$activity %in% c("deploy", "unknown") | (.data$download | is.na(.data$download))) %>%
+    group_by(.data$station_id, .data$receiver) %>%
+    dbplyr::window_order(.data$date_deployment) %>%
+    mutate(date_period_start = .data$date_deployment,
            # if battery dead at next deployment and last detection at next deployment is later than date_deployment, then deployment_period_end is last_detection of next deployment
-           date_period_end = if_else(lead(battery_dead) & lead(last_detection) > date_deployment, lead(last_detection), lead(date_deployment))) %>%
+           date_period_end = if_else(lead(.data$battery_dead) & lead(.data$last_detection) > .data$date_deployment, lead(.data$last_detection), lead(.data$date_deployment))) %>%
     ungroup() %>%
-    group_by(station_id, receiver) %>%
-    dbplyr::window_order(date_deployment) %>%
+    group_by(.data$station_id, .data$receiver) %>%
+    dbplyr::window_order(.data$date_deployment) %>%
     # create a grouping variable that will indicate a new 'period' if the 
     # previous deployment end period does not equal period start (i.e. not a continuous deployment)
-    mutate(cond = if_else(!is.na(lag(date_period_end)) & date_period_start != lag(date_period_end), 1, 0)) %>%
-    mutate(group = cumsum(cond)) %>%
+    mutate(cond = if_else(!is.na(lag(.data$date_period_end)) & .data$date_period_start != lag(.data$date_period_end), 1, 0)) %>%
+    mutate(group = cumsum(.data$cond)) %>%
     ungroup() %>%
     # remove open-ended deployments
-    filter(!is.na(date_period_end)) %>%
+    filter(!is.na(.data$date_period_end)) %>%
     # now group by grouping variable created above and get min/max dates for period
-    group_by(station_id, receiver, group) %>%
-    dbplyr::window_order(date_deployment) %>%
-    summarize(date_period_start = min(date_period_start, na.rm = TRUE),
-              date_period_end = max(date_period_end, na.rm = TRUE), 
+    group_by(.data$station_id, .data$receiver, .data$group) %>%
+    dbplyr::window_order(.data$date_deployment) %>%
+    summarize(date_period_start = min(.data$date_period_start, na.rm = TRUE),
+              date_period_end = max(.data$date_period_end, na.rm = TRUE), 
               .groups = c("keep")) %>%
     ungroup() %>%
     # get receiver_id not receiver_number
     left_join(receiver, c("receiver" = "receiver_number")) %>%
-    select(station_id, receiver_id, date_period_start, date_period_end) %>%
-    arrange(station_id, date_period_start) 
+    select(.data$station_id, .data$receiver_id, .data$date_period_start, .data$date_period_end) %>%
+    arrange(.data$station_id, .data$date_period_start) 
   
   if(collect)
     return(collect(x))
@@ -68,12 +69,12 @@ db_query_detection_clean <- function(con, collect = TRUE){
   detection_true <- db_read(con, "telemetry.detection_true", collect = FALSE)
   deployment_period <- db_query_deployment_period(con, collect = FALSE)
   x <- detection_true %>%
-    select(datetime_utc, receiver, transmitter) %>%
-    mutate(datetime_pst = timezone("Etc/GMT+8", datetime_utc)) %>%
+    select(.data$datetime_utc, .data$receiver, .data$transmitter) %>%
+    mutate(datetime_pst = timezone("Etc/GMT+8", .data$datetime_utc)) %>%
     ### filter to deployment periods to get station
     left_join(deployment_period, by = c("receiver" = "receiver_id")) %>%
-    filter(datetime_pst >= date_period_start & datetime_pst <= date_period_end) %>%
-    select(transmitter, receiver, station_id, datetime_pst)
+    filter(.data$datetime_pst >= .data$date_period_start & .data$datetime_pst <= .data$date_period_end) %>%
+    select(.data$transmitter, .data$receiver, .data$station_id, .data$datetime_pst)
   
   if(collect)
     return(collect(x))
@@ -93,7 +94,7 @@ db_query_detection_station <- function(con, timestep = "week", collect = TRUE){
   station <- db_read(con, "telemetry.station", collect = FALSE)
   x <- detection %>%
     mutate(timestep = as.Date(sql(glue::glue("date_trunc('{timestep}', datetime_pst)")))) %>%
-    distinct(timestep, station_id) %>%
+    distinct(.data$timestep, .data$station_id) %>%
     left_join(station, "station_id")
   
   if(collect)
@@ -115,8 +116,8 @@ db_query_capture_tidy <- function(con, collect = TRUE){
   transmitter <- db_read(con, "telemetry.transmitter", collect = FALSE)
   
   x <- capture %>%
-    left_join(select(fish, -insertion), "pittag_id") %>%
-    left_join(select(transmitter, -insertion), "transmitter_id")
+    left_join(select(fish, -.data$insertion), "pittag_id") %>%
+    left_join(select(transmitter, -.data$insertion), "transmitter_id")
   
   if(collect)
     return(collect(x))
@@ -139,20 +140,20 @@ db_query_detection_tidy <- function(con, clean = TRUE, collect = TRUE){
   
   x <- detection_clean %>%
     left_join(capture_tidy, by = c("transmitter" = "transmitter_id")) %>%
-    left_join(select(station, -insertion), "station_id") %>%
-    left_join(select(receiver_group,  -max_rkm), "receiver_group")
+    left_join(select(station, -.data$insertion), "station_id") %>%
+    left_join(select(receiver_group,  -.data$max_rkm), "receiver_group")
   
   if(clean){
     x <- x %>%
-      select(transmitter, receiver_group, pittag_id, tag_insertion_date,
-             forklength_cm, weight_kg, sex, receiver_group_rkm, 
-             receiver_group_temp_zone, receiver_group_flow_zone)
+      select(.data$transmitter, .data$receiver_group, .data$pittag_id, .data$tag_insertion_date,
+             .data$forklength_cm, .data$weight_kg, .data$sex, .data$receiver_group_rkm, 
+             .data$receiver_group_temp_zone, .data$receiver_group_flow_zone)
     if(collect){
       return(x %>% 
                collect() %>%
-               mutate(receiver_group = forcats::fct_rev(forcats::fct_reorder(receiver_group, receiver_group_rkm)),
-                      station_id = forcats::fct_rev(forcats::fct_reorder(station_id, rkm)),
-                      station_name = forcats::fct_rev(forcats::fct_reorder(station_name, rkm))))
+               mutate(receiver_group = forcats::fct_rev(forcats::fct_reorder(.data$receiver_group, .data$receiver_group_rkm)),
+                      station_id = forcats::fct_rev(forcats::fct_reorder(.data$station_id, .data$rkm)),
+                      station_name = forcats::fct_rev(forcats::fct_reorder(.data$station_name, .data$rkm))))
     }
   }
   
@@ -176,25 +177,26 @@ db_query_detection_timestep <- function(con, timestep = "week", clean = TRUE, co
   
   x <- detection_tidy %>%
     mutate(timestep = sql(glue::glue("date_trunc('{timestep}', datetime_pst)"))) %>%
-    group_by(transmitter, timestep, receiver_group) %>%
+    group_by(.data$transmitter, .data$timestep, .data$receiver_group) %>%
     summarize(ndetects = n()) %>%
     ungroup() %>%
-    group_by(transmitter, timestep) %>%
-    slice_max(ndetects) %>%
+    group_by(.data$transmitter, .data$timestep) %>%
+    slice_max(.data$ndetects) %>%
     ungroup() %>%
     left_join(capture_tidy, by = c("transmitter" = "transmitter_id")) %>%
-    left_join(select(receiver_group,  -max_rkm), "receiver_group")
+    left_join(select(receiver_group,  -.data$max_rkm), "receiver_group")
   
   ### if collect + clean also adds nice factor to receiver group
   if(clean){
     x <- x %>%
-      select(transmitter, receiver_group, timestep, ndetects, pittag_id, tag_insertion_date,
-             forklength_cm, weight_kg, sex, receiver_group_rkm, 
-             receiver_group_temp_zone, receiver_group_flow_zone)
+      select(.data$transmitter, .data$receiver_group, .data$timestep, .data$ndetects, 
+             .data$pittag_id, .data$tag_insertion_date,
+             .data$forklength_cm, .data$weight_kg, .data$sex, .data$receiver_group_rkm, 
+             .data$receiver_group_temp_zone, .data$receiver_group_flow_zone)
     if(collect){
       return(x %>% 
                collect() %>%
-               mutate(receiver_group = forcats::fct_rev(forcats::fct_reorder(receiver_group, receiver_group_rkm))))
+               mutate(receiver_group = forcats::fct_rev(forcats::fct_reorder(.data$receiver_group, .data$receiver_group_rkm))))
     }
   }
      

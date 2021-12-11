@@ -8,12 +8,12 @@ db_query_temperature_deployment_period <- function(con, collect = TRUE){
   temp_deployment <- db_read(con, "environmental.temperature_deployment", collect = FALSE)
   x <- temp_deployment %>%
     # filter(download | is.na(download)) %>%
-    group_by(station_id, logger_id) %>%
-    dbplyr::window_order(date_deployment) %>%
-    summarize(date_period_start = min(date_deployment, na.rm = TRUE),
-              date_period_end = max(date_deployment, na.rm = TRUE)) %>%
+    group_by(.data$station_id, .data$logger_id) %>%
+    dbplyr::window_order(.data$date_deployment) %>%
+    summarize(date_period_start = min(.data$date_deployment, na.rm = TRUE),
+              date_period_end = max(.data$date_deployment, na.rm = TRUE)) %>%
     ungroup() %>%
-    arrange(station_id, date_period_start)
+    arrange(.data$station_id, .data$date_period_start)
   
   if(collect)
     return(collect(x))
@@ -33,8 +33,8 @@ db_query_temperature_clean <- function(con, collect = TRUE){
   
   x <- temp %>%
     left_join(temp_deployment_period, "logger_id") %>%
-    filter(datetime_pst >= date_period_start & datetime_pst <= date_period_end) %>%
-    select(station_id, logger_id, datetime_pst, temperature_c)
+    filter(.data$datetime_pst >= .data$date_period_start & .data$datetime_pst <= .data$date_period_end) %>%
+    select(.data$station_id, .data$logger_id, .data$datetime_pst, .data$temperature_c)
   
   if(collect)
     return(collect(x))
@@ -54,19 +54,20 @@ db_query_temperature_tidy <- function(con, clean = TRUE, collect = TRUE){
   receiver_group <- db_read(con, "telemetry.receiver_group", collect = FALSE)
   
   x <- temperature_clean %>%
-    left_join(select(station, -insertion), "station_id") %>%
-    left_join(select(receiver_group,  -max_rkm), "receiver_group") 
+    left_join(select(station, -.data$insertion), "station_id") %>%
+    left_join(select(receiver_group,  -.data$max_rkm), "receiver_group") 
   
   if(clean){
     x <- x %>%
-      select(station_id, logger_id, datetime_pst, temperature_c, station_name,  
-             receiver_group, receiver_group_temp_zone, rkm, lon, lat, geom)
+      select(.data$station_id, .data$logger_id, .data$datetime_pst, .data$temperature_c,
+             .data$station_name, .data$receiver_group, .data$receiver_group_temp_zone, 
+             .data$rkm, .data$lon, .data$lat, .data$geom)
     if(collect){
       return(x %>% 
                collect() %>%
-               mutate(receiver_group = forcats::fct_rev(forcats::fct_reorder(receiver_group, receiver_group_rkm)),
-                      station_id = forcats::fct_rev(forcats::fct_reorder(station_id, rkm)),
-                      station_name = forcats::fct_rev(forcats::fct_reorder(station_name, rkm))))
+               mutate(receiver_group = forcats::fct_rev(forcats::fct_reorder(.data$receiver_group, .data$receiver_group_rkm)),
+                      station_id = forcats::fct_rev(forcats::fct_reorder(.data$station_id, .data$rkm)),
+                      station_name = forcats::fct_rev(forcats::fct_reorder(.data$station_name, .data$rkm))))
     }
   }
   
