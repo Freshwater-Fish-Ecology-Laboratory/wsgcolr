@@ -88,11 +88,11 @@ db_query_detection_clean <- function(con, collect = TRUE){
 #' @return A tibble of queried data.
 #'
 #' @export
-db_query_detection_station <- function(con, time_step = "week", collect = TRUE){
+db_query_detection_station <- function(con, timestep = "week", collect = TRUE){
   detection <- db_query_detection_clean(con, collect = FALSE)
   station <- db_read(con, "telemetry.station", collect = FALSE)
   x <- detection %>%
-    mutate(timestep = as.Date(sql(glue::glue("date_trunc('{time_step}', datetime_pst)")))) %>%
+    mutate(timestep = as.Date(sql(glue::glue("date_trunc('{timestep}', datetime_pst)")))) %>%
     distinct(timestep, station_id) %>%
     left_join(station, "station_id")
   
@@ -169,13 +169,13 @@ db_query_detection_tidy <- function(con, clean = TRUE, collect = TRUE){
 #' @return A tibble of the queried data.
 #'
 #' @export
-db_query_detection_timestep <- function(con, time_step = "week", clean = TRUE, collect = TRUE){
+db_query_detection_timestep <- function(con, timestep = "week", clean = TRUE, collect = TRUE){
   detection_tidy <- db_query_detection_tidy(con, collect = FALSE)
   capture_tidy <- db_query_capture_tidy(con, collect = FALSE)
   receiver_group <- db_read(con, "telemetry.receiver_group", collect = FALSE)
   
   x <- detection_tidy %>%
-    mutate(timestep = sql(glue::glue("date_trunc('{time_step}', datetime_pst)"))) %>%
+    mutate(timestep = sql(glue::glue("date_trunc('{timestep}', datetime_pst)"))) %>%
     group_by(transmitter, timestep, receiver_group) %>%
     summarize(ndetects = n()) %>%
     ungroup() %>%

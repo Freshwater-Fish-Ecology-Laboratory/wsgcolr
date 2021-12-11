@@ -99,11 +99,11 @@ plot_deployment <- function(x, ...) {
 #' @examples
 #'
 #' \dontrun{
-#' plot_deployment(station, river, deployment)
+#' plot_deployment(deployment, station, river)
 #' }
-plot_deployment.data.frame <- function(deployment, station, river, detection = NULL, station_col){
+plot_deployment.data.frame <- function(x, station, river, detection = NULL, station_col = "station_name"){
   
-  gp_temp <- plot_deployment_temporal(deployment = deployment,
+  gp_temp <- plot_deployment_temporal(deployment = x,
                                       detection = detection,
                                       station_col = station_col)
   gp_spat <- plot_deployment_spatial(station = station,
@@ -121,18 +121,19 @@ plot_deployment.data.frame <- function(deployment, station, river, detection = N
 #' \dontrun{
 #' plot_deployment(con)
 #' }
-plot_deployment.PqConnection <- function(con, detection = FALSE){
+plot_deployment.PqConnection <- function(x, detection = FALSE){
   
-  deployment <- db_read_deployment_period(con)
-  station <- db_read_station(con)
-  river <- db_read(con, "spatial.canada_reach", sf = TRUE)
+  deployment <- db_query_deployment_period(x, collect = TRUE) 
+  station <- db_read_station(x)
+  deployment <- left_join(deployment, station, "station_id")
+  river <- db_read(x, "spatial.canada_reach", sf = TRUE)
   
   detection_station <- NULL
   if(detection){
-    detection_station <-  db_read_detection_simple(con)
+    detection_station <-  db_query_detection_station(x)
   }
 
-  plot_deployment(deployment = deployment,
+  plot_deployment(x = deployment,
                   station = station,
                   river = river,
                   detection = detection_station,

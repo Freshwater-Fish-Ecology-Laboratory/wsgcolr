@@ -9,7 +9,7 @@ test_that("query functions work", {
   db_query_detection_tidy(con, collect = FALSE)
   db_query_detection_tidy(con, clean = FALSE, collect = FALSE)
   db_query_detection_timestep(con, collect = FALSE)
-  db_query_detection_timestep(con, time_step = "day", collect = FALSE)
+  db_query_detection_timestep(con, timestep = "day", collect = FALSE)
   db_query_detection_timestep(con, clean = FALSE, collect = FALSE)
   
   ### environmental

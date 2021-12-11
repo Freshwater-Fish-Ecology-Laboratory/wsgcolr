@@ -23,15 +23,15 @@ plot_detection_path <- function(x, ...) {
 #' \dontrun{
 #' lims_x = c(min(deployment$date_deployment), max(deployment$date_last_download))
 #' lims_y = c(0, 56)
-#' plot_detection_path(detection, deployment, reference_rkm)
+#' plot_detection_path(detection_event, deployment)
 #' }
 
-plot_detection_path.data.frame <- function(detection_event, deployment, 
+plot_detection_path.data.frame <- function(x, deployment, 
                                            reference_rkm = reference_rkms(),
                                 receiver_group = "receiver_group", 
                                 receiver_group_rkm = "receiver_group_rkm",
-                                lims_x = range(detection_event$timestep), 
-                                lims_y = range(detection_event$receiver_group_rkm)){
+                                lims_x = range(x$timestep), 
+                                lims_y = range(x$receiver_group_rkm)){
 
   # chk_detection_event(detection_event)
   # chk_deployment(deployment)
@@ -42,7 +42,7 @@ plot_detection_path.data.frame <- function(detection_event, deployment,
   # chk_is(lims_y, "numeric")
   # chk_length(lims_y, 2L)
 
-  ggplot(data = detection_event, aes(x = timestep, y = !! sym(receiver_group_rkm))) +
+  ggplot(data = x, aes(x = timestep, y = !! sym(receiver_group_rkm))) +
     geom_segment(data = deployment, aes(x = date_period_start, y = !! sym(receiver_group_rkm),
                                         xend = date_period_end, yend = !! sym(receiver_group_rkm)),
                  alpha = 1, size = 3.8, color = "#EDEDED") +
@@ -50,11 +50,11 @@ plot_detection_path.data.frame <- function(detection_event, deployment,
     geom_point(aes(color = receiver_group_colour), size = 1.5) +
     scale_color_identity() +
     labs(x = 'Date', y = 'Rkm', color = "Array") +
-    lims(x = lims_x,
-         y = lims_y) +
+    coord_cartesian(ylim = lims_y, xlim = lims_x) +
     geom_hline(data = reference_rkm, aes(yintercept = rkm), linetype = 'dotted') +
     geom_text(data = reference_rkm, aes(label = label, x = lims_x[1], y = rkm),
-              vjust = -0.5, hjust = 0.1, size = 3.5)
+              vjust = -0.5, hjust = 0.1, size = 3.5) +
+    theme_bw()
 
 }
 
@@ -71,20 +71,30 @@ plot_detection_path.data.frame <- function(detection_event, deployment,
 #' lims_y = c(0, 56)
 #' plot_detection_path(con, transmitter_id = "A69-1303-10060", lims_x = lims_x, lims_y = lims_y)
 #' }
-plot_detection_path.PqConnection <- function(con, 
-                                             transmitter_id,
+plot_detection_path.PqConnection <- function(x, 
+                                             transmitter_id = "A69-1303-10070",
                                              max_absence = 96,
                                              lims_x = c(as.Date("2010-01-01"), as.Date("2020-01-01")),
                                              lims_y = c(0, 56)){
   
-  detection <- db_read_detection_tidy(con, timestep = "week", transmitter_id = transmitter_id)
-  receiver_group <- db_read_receiver_group(con) %>%
+  detection <- db_query_detection_timestep(x, timestep = "week", collect = FALSE)
+  
+  if(length(transmitter_id))
+    detection <- detection %>%
+    filter(transmitter %in% transmitter_id)
+  
+  detection <- collect(detection)
+  receiver_group <- db_read_receiver_group(x) %>%
     select(receiver_group, receiver_group, receiver_group_colour)
+  station <- db_read_station(x, sf = FALSE)
   detection_event <- detection_event(detection, receiver_group = "receiver_group", max_absence = max_absence) %>%
     left_join(receiver_group, by = "receiver_group")
-  deployment <- db_read_deployment_period(con)
+  deployment <- db_query_deployment_period(x) %>%
+    left_join(station, "station_id") %>%
+    left_join(receiver_group, "receiver_group")
 
-  plot_detection_path.data.frame(detection_event, deployment = deployment,
+  plot_detection_path.data.frame(x = detection_event, 
+                                 deployment = deployment,
                                  reference_rkm = reference_rkms(), 
                                  receiver_group = "receiver_group",
                                  receiver_group_rkm = "receiver_group_rkm",

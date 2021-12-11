@@ -31,4 +31,11 @@ Imports:
     purrr,
     readr,
     dttr2,
-    dbplyr
+    dbplyr,
+    DBI,
+    RPostgres,
+    config,
+    pool,
+    scales,
+    stringr,
+    tibble
