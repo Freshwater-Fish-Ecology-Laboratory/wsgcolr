@@ -4,7 +4,10 @@
 \alias{db_disconnect}
 \title{Disconnect from database}
 \usage{
-db_disconnect(conn)
+db_disconnect(con)
+}
+\arguments{
+\item{con}{A PqConnection object.}
 }
 \value{
 A PostgreSQL connection object.

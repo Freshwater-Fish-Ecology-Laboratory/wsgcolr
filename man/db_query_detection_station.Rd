@@ -4,7 +4,14 @@
 \alias{db_query_detection_station}
 \title{Query clean detections and summarize by station and timestep}
 \usage{
-db_query_detection_station(con, time_step = "week", collect = TRUE)
+db_query_detection_station(con, timestep = "week", collect = TRUE)
+}
+\arguments{
+\item{con}{A PqConnection object.}
+
+\item{timestep}{A character string of the timestep. Acceptable values are those accepted by \code{lubridate::floor_date()}: second, minute, hour, day, week, month, bimonth, quarter, season, halfyear and year.}
+
+\item{collect}{A flag indicating whether to collect dbplyr output into memory.}
 }
 \value{
 A tibble of queried data.

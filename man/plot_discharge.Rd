@@ -8,15 +8,24 @@
 \usage{
 plot_discharge(x, ...)
 
-\method{plot_discharge}{data.frame}(x, by = "station_id")
+\method{plot_discharge}{data.frame}(x, by = "station_id", ...)
 
 \method{plot_discharge}{PqConnection}(
   con,
   station = c("HLK_ALH", "BRD_BRDS_BRX", "US_CAN", "BIR_QR"),
-  by = "station_id"
+  by = "station_id",
+  ...
 )
 }
 \arguments{
+\item{x}{The object.}
+
+\item{...}{Arguments passed to another function.}
+
+\item{by}{A string of the column name to group by.}
+
+\item{con}{A PqConnection object.}
+
 \item{station}{A sf object of the station point locations containing column 'array' (for color coding). Geometry column must inherit class 'sfc_POINT' or 'sfc_MULTIPOINT'.}
 }
 \description{

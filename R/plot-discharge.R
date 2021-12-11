@@ -11,7 +11,7 @@ plot_discharge <- function(x, ...) {
 #' @describeIn plot_discharge method to plot discharge from data.frame
 #' @inheritParams params
 #' @export
-plot_discharge.data.frame <- function(x, by = "station_id"){
+plot_discharge.data.frame <- function(x, by = "station_id", ...){
   
   gp <- ggplot(data = x, aes(x = datetime_discharge, y = discharge_cms)) +
     geom_point() +
@@ -29,7 +29,8 @@ plot_discharge.data.frame <- function(x, by = "station_id"){
 #' @inheritParams params
 #' @export
 plot_discharge.PqConnection <- function(con, station = c("HLK_ALH", "BRD_BRDS_BRX", 
-                                                         "US_CAN", "BIR_QR"), by = "station_id"){
+                                                         "US_CAN", "BIR_QR"), 
+                                        by = "station_id", ...){
   
   discharge <- db_read_discharge(con, station = station)
   plot_discharge.data.frame(discharge, by = by)

@@ -6,6 +6,11 @@
 \usage{
 read_temperature_files(x, quiet = FALSE)
 }
+\arguments{
+\item{x}{The object.}
+
+\item{quiet}{A flag indicating whether to suppress warnings and messages.}
+}
 \value{
 A tibble.
 }

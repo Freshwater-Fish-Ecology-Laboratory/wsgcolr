@@ -7,6 +7,11 @@ Clean data is filtered within deployments}
 \usage{
 db_query_temperature_clean(con, collect = TRUE)
 }
+\arguments{
+\item{con}{A PqConnection object.}
+
+\item{collect}{A flag indicating whether to collect dbplyr output into memory.}
+}
 \value{
 A tibble of the queried data.
 }

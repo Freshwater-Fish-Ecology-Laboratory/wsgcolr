@@ -15,18 +15,18 @@ db_write_detection <- function(con, file, clean = TRUE){
                           "Latitude", "Longitude", "Transmitter Type", "Sensor Precision"))
     
     x <- x %>%
-      rename(datetime_utc = `Date and Time (UTC)`,
-             receiver = Receiver,
-             transmitter = Transmitter,
-             transmitter_name = `Transmitter Name`,
-             transmitter_serial = `Transmitter Serial`,
-             sensor_value = `Sensor Value`,
-             sensor_unit = `Sensor Unit`,
-             station_name = `Station Name`,
-             lat = Latitude,
-             lon = Longitude,
-             transmitter_type = `Transmitter Type`,
-             sensor_precision = `Sensor Precision`)
+      rename(datetime_utc = .data$`Date and Time (UTC)`,
+             receiver = .data$Receiver,
+             transmitter = .data$Transmitter,
+             transmitter_name = .data$`Transmitter Name`,
+             transmitter_serial = .data$`Transmitter Serial`,
+             sensor_value = .data$`Sensor Value`,
+             sensor_unit = .data$`Sensor Unit`,
+             station_name = .data$`Station Name`,
+             lat = .data$Latitude,
+             lon = .data$Longitude,
+             transmitter_type = .data$`Transmitter Type`,
+             sensor_precision = .data$`Sensor Precision`)
   }
   
   x$file <- basename(file)
@@ -44,7 +44,7 @@ db_write_detection <- function(con, file, clean = TRUE){
 db_write_transmitter <- function(con, file){
   col_types <- "ccccnnnccinnnccccTTc"
   x <- readr::read_csv(file, col_types = col_types)
-  db_write(con = conn, table = "telemetry.transmitter", data = x)
+  db_write(con = con, table = "telemetry.transmitter", data = x)
 }
 
 #' Write receiver csv to db
@@ -56,7 +56,7 @@ db_write_transmitter <- function(con, file){
 db_write_receiver <- function(con, x){
   col_types <- "cc"
   x <- readr::read_csv(file, col_types = col_types)
-  db_write(con = conn, table = "telemetry.receiver", data = x)
+  db_write(con = con, table = "telemetry.receiver", data = x)
 }
 
 #' Write deployment to db
@@ -79,12 +79,12 @@ db_write_deployment <- function(con, x){
 #' @export
 db_write_temperature_deployment <- function(con, x){
   x <- x %>% 
-    select(station_id, date_deployment, templogger_id,
-                    temp_download, temp_redeploy, comment_temp) %>%
-    rename(comment = comment_temp,
-           logger_id = templogger_id,
-           download = temp_download,
-           redeploy = temp_redeploy)
+    select(.data$station_id, .data$date_deployment, .data$templogger_id,
+           .data$temp_download, .data$temp_redeploy, .data$comment_temp) %>%
+    rename(comment = .data$comment_temp,
+           logger_id = .data$templogger_id,
+           download = .data$temp_download,
+           redeploy = .data$temp_redeploy)
   
   db_write(con = con, table = "environmental.temperature_deployment", data = x)
 }

@@ -6,6 +6,11 @@
 \usage{
 read_temperature_file(x, tz = "PST8PDT")
 }
+\arguments{
+\item{x}{The object.}
+
+\item{tz}{A string of the timezone.}
+}
 \value{
 A tibble.
 }

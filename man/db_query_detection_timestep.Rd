@@ -6,10 +6,19 @@
 \usage{
 db_query_detection_timestep(
   con,
-  time_step = "week",
+  timestep = "week",
   clean = TRUE,
   collect = TRUE
 )
+}
+\arguments{
+\item{con}{A PqConnection object.}
+
+\item{timestep}{A character string of the timestep. Acceptable values are those accepted by \code{lubridate::floor_date()}: second, minute, hour, day, week, month, bimonth, quarter, season, halfyear and year.}
+
+\item{clean}{A flag indicating whether to select the most useful columns.}
+
+\item{collect}{A flag indicating whether to collect dbplyr output into memory.}
 }
 \value{
 A tibble of the queried data.

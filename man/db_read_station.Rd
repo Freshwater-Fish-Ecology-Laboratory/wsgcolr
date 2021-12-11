@@ -6,6 +6,11 @@
 \usage{
 db_read_station(con, sf = TRUE)
 }
+\arguments{
+\item{con}{A PqConnection object.}
+
+\item{sf}{A flag indicating whether to provide output as sf object.}
+}
 \value{
 A tibble of the summarized detection data.
 }

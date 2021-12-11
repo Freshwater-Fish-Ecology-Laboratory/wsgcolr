@@ -6,6 +6,11 @@
 \usage{
 db_write_transmitter(con, file)
 }
+\arguments{
+\item{con}{A PqConnection object.}
+
+\item{file}{A string of the file path.}
+}
 \value{
 The modified database
 }

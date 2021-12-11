@@ -101,7 +101,9 @@ plot_deployment <- function(x, ...) {
 #' \dontrun{
 #' plot_deployment(deployment, station, river)
 #' }
-plot_deployment.data.frame <- function(x, station, river, detection = NULL, station_col = "station_name"){
+plot_deployment.data.frame <- function(x, station, river, 
+                                       detection = NULL, 
+                                       station_col = "station_name", ...){
   
   gp_temp <- plot_deployment_temporal(deployment = x,
                                       detection = detection,
@@ -121,7 +123,7 @@ plot_deployment.data.frame <- function(x, station, river, detection = NULL, stat
 #' \dontrun{
 #' plot_deployment(con)
 #' }
-plot_deployment.PqConnection <- function(x, detection = FALSE){
+plot_deployment.PqConnection <- function(x, detection = FALSE, ...){
   
   deployment <- db_query_deployment_period(x, collect = TRUE) 
   station <- db_read_station(x)

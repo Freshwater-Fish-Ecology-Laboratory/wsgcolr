@@ -31,7 +31,8 @@ plot_detection_path.data.frame <- function(x, deployment,
                                 receiver_group = "receiver_group", 
                                 receiver_group_rkm = "receiver_group_rkm",
                                 lims_x = range(x$timestep), 
-                                lims_y = range(x$receiver_group_rkm)){
+                                lims_y = range(x$receiver_group_rkm), 
+                                ...){
 
   # chk_detection_event(detection_event)
   # chk_deployment(deployment)
@@ -75,7 +76,7 @@ plot_detection_path.PqConnection <- function(x,
                                              transmitter_id = "A69-1303-10070",
                                              max_absence = 96,
                                              lims_x = c(as.Date("2010-01-01"), as.Date("2020-01-01")),
-                                             lims_y = c(0, 56)){
+                                             lims_y = c(0, 56), ...){
   
   detection <- db_query_detection_timestep(x, timestep = "week", collect = FALSE)
   

@@ -31,6 +31,44 @@
 \item{station}{A sf object of the station point locations containing column 'array' (for color coding). Geometry column must inherit class 'sfc_POINT' or 'sfc_MULTIPOINT'.}
 
 \item{river}{A sf object of the river polygon. Geometry column must inherit class 'sfc_POLYGON' or 'sfc_MULTIPOLYGON'.}
+
+\item{con}{A PqConnection object.}
+
+\item{x}{The object.}
+
+\item{pool}{A flag indicating whether to pool databse connection.}
+
+\item{collect}{A flag indicating whether to collect dbplyr output into memory.}
+
+\item{clean}{A flag indicating whether to select the most useful columns.}
+
+\item{sf}{A flag indicating whether to provide output as sf object.}
+
+\item{table}{A string of the schema and table name separated by a '.' (e.g., "telemetry.detection")}
+
+\item{append}{A flag indicating whether to append data to database table.}
+
+\item{data}{A data.frame of the data to write to database.}
+
+\item{file}{A string of the file path.}
+
+\item{tz_data}{A string of the timezone of the data.}
+
+\item{station_col}{A string of the column name with station names.}
+
+\item{transmitter_id}{A character vector of transmitter_id.}
+
+\item{tz}{A string of the timezone.}
+
+\item{quiet}{A flag indicating whether to suppress warnings and messages.}
+
+\item{dbname}{A string of the database name.}
+
+\item{schema}{A string of the schema name.}
+
+\item{...}{Arguments passed to another function.}
+
+\item{by}{A string of the column name to group by.}
 }
 \description{
 Parameter Descriptions for wsgcolr functions

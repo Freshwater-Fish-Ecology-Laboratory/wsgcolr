@@ -1,27 +1,3 @@
-#' Aggregate detection by timestep
-#'
-#' Receiver group (location_column) per transmitter/timestep assigned by greatest number of detections.
-#'
-#' @inheritParams params
-#' @return A modified tibble of the detection data.
-#'
-#' @export
-detection_timestep <- function(detection, timestep = "week", receiver_group = "receiver_group"){
-
-  chk_detection(detection)
-  chk_timestep(timestep)
-  chk_string(receiver_group)
-
-  detection %>%
-    mutate(timestep = as.Date(lubridate::floor_date(datetime_utc, unit = timestep))) %>%
-    group_by(transmitter, timestep, !! sym(receiver_group)) %>%
-    summarise(ndetection = n()) %>%
-    ungroup() %>%
-    group_by(transmitter, timestep) %>%
-    slice_max(ndetection) %>%
-    ungroup() 
-}
-
 #' Assign detections to events and paths
 #'
 #' A new detection event occurs if fish moves to new receiver group or if more than `max_absence` time passes without a detection.

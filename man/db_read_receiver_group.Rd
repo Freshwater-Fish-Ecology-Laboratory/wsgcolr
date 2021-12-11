@@ -6,6 +6,9 @@
 \usage{
 db_read_receiver_group(con)
 }
+\arguments{
+\item{con}{A PqConnection object.}
+}
 \value{
 A tibble of the summarized detection data.
 }

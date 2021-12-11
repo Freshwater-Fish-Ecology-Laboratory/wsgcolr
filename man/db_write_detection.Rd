@@ -6,6 +6,13 @@
 \usage{
 db_write_detection(con, file, clean = TRUE)
 }
+\arguments{
+\item{con}{A PqConnection object.}
+
+\item{file}{A string of the file path.}
+
+\item{clean}{A flag indicating whether to select the most useful columns.}
+}
 \value{
 The modified database
 }

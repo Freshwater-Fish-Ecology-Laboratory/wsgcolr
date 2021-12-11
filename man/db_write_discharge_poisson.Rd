@@ -6,6 +6,13 @@
 \usage{
 db_write_discharge_poisson(con, file, tz_data = "Etc/GMT+8")
 }
+\arguments{
+\item{con}{A PqConnection object.}
+
+\item{file}{A string of the file path.}
+
+\item{tz_data}{A string of the timezone of the data.}
+}
 \value{
 The modified database
 }

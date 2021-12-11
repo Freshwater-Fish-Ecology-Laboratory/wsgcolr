@@ -6,6 +6,15 @@
 \usage{
 db_read(con, table, sf = FALSE, collect = TRUE)
 }
+\arguments{
+\item{con}{A PqConnection object.}
+
+\item{table}{A string of the schema and table name separated by a '.' (e.g., "telemetry.detection")}
+
+\item{sf}{A flag indicating whether to provide output as sf object.}
+
+\item{collect}{A flag indicating whether to collect dbplyr output into memory.}
+}
 \value{
 A data.frame of the data.
 }

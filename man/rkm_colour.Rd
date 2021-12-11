@@ -6,6 +6,9 @@
 \usage{
 rkm_colour(x)
 }
+\arguments{
+\item{x}{The object.}
+}
 \value{
 A vector of colours
 }

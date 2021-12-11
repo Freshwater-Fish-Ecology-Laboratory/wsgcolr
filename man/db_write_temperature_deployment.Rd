@@ -6,6 +6,11 @@
 \usage{
 db_write_temperature_deployment(con, x)
 }
+\arguments{
+\item{con}{A PqConnection object.}
+
+\item{x}{The object.}
+}
 \value{
 The modified database
 }

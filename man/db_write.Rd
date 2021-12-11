@@ -6,6 +6,17 @@
 \usage{
 db_write(con, table, data, append = TRUE, ...)
 }
+\arguments{
+\item{con}{A PqConnection object.}
+
+\item{table}{A string of the schema and table name separated by a '.' (e.g., "telemetry.detection")}
+
+\item{data}{A data.frame of the data to write to database.}
+
+\item{append}{A flag indicating whether to append data to database table.}
+
+\item{...}{Arguments passed to another function.}
+}
 \value{
 The modified database.
 }

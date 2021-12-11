@@ -14,6 +14,8 @@ plot_deployment_temporal(
 \item{deployment}{A tibble of the receiver deployments containing columns 'date_deployment', 'date_last_download', 'station', 'array', 'array_rkm'.}
 
 \item{detection}{A tibble of raw detection data containing columns 'transmitter_id' and 'datetime_utc'.}
+
+\item{station_col}{A string of the column name with station names.}
 }
 \value{
 An object of class 'ggplot'.

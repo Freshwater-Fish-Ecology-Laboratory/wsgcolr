@@ -6,6 +6,13 @@
 \usage{
 db_query_detection_tidy(con, clean = TRUE, collect = TRUE)
 }
+\arguments{
+\item{con}{A PqConnection object.}
+
+\item{clean}{A flag indicating whether to select the most useful columns.}
+
+\item{collect}{A flag indicating whether to collect dbplyr output into memory.}
+}
 \value{
 A tibble of the queried data.
 }

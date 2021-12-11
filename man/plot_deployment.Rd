@@ -8,18 +8,29 @@
 \usage{
 plot_deployment(x, ...)
 
-\method{plot_deployment}{data.frame}(deployment, station, river, detection = NULL, station_col)
+\method{plot_deployment}{data.frame}(
+  x,
+  station,
+  river,
+  detection = NULL,
+  station_col = "station_name",
+  ...
+)
 
-\method{plot_deployment}{PqConnection}(con, detection = FALSE)
+\method{plot_deployment}{PqConnection}(x, detection = FALSE, ...)
 }
 \arguments{
-\item{deployment}{A tibble of the receiver deployments containing columns 'date_deployment', 'date_last_download', 'station', 'array', 'array_rkm'.}
+\item{x}{The object.}
+
+\item{...}{Arguments passed to another function.}
 
 \item{station}{A sf object of the station point locations containing column 'array' (for color coding). Geometry column must inherit class 'sfc_POINT' or 'sfc_MULTIPOINT'.}
 
 \item{river}{A sf object of the river polygon. Geometry column must inherit class 'sfc_POLYGON' or 'sfc_MULTIPOLYGON'.}
 
 \item{detection}{A tibble of raw detection data containing columns 'transmitter_id' and 'datetime_utc'.}
+
+\item{station_col}{A string of the column name with station names.}
 }
 \description{
 Generic function to plot the deployment periods.
@@ -34,7 +45,7 @@ Generic function to plot the deployment periods.
 \examples{
 
 \dontrun{
-plot_deployment(station, river, deployment)
+plot_deployment(deployment, station, river)
 }
 
 \dontrun{

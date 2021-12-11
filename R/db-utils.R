@@ -24,7 +24,7 @@ db_connect <- function(dbname = getOption("dbname"), schema = NULL, pool = FALSE
   
   config <- config::get(dbname)
   fun <- if(pool) pool::dbPool else DBI::dbConnect
-  conn <- fun(
+  con <- fun(
     RPostgres::Postgres(),
     user = config$user,
     password = config$password,
@@ -33,8 +33,8 @@ db_connect <- function(dbname = getOption("dbname"), schema = NULL, pool = FALSE
     dbname = config$dbname
   )
   
-  if(!is.null(schema)) set_schema(conn, schema)
-  conn
+  if(!is.null(schema)) set_schema(con, schema)
+  con
 }
 
 #' Disconnect from database
@@ -43,8 +43,8 @@ db_connect <- function(dbname = getOption("dbname"), schema = NULL, pool = FALSE
 #' @return A PostgreSQL connection object.
 #'
 #' @export
-db_disconnect <- function(conn){
-  DBI::dbDisconnect(conn)
+db_disconnect <- function(con){
+  DBI::dbDisconnect(con)
 }
 
 

@@ -14,6 +14,26 @@
 #' @param deployment A tibble of the receiver deployments containing columns 'date_deployment', 'date_last_download', 'station', 'array', 'array_rkm'.
 #' @param station A sf object of the station point locations containing column 'array' (for color coding). Geometry column must inherit class 'sfc_POINT' or 'sfc_MULTIPOINT'.
 #' @param river A sf object of the river polygon. Geometry column must inherit class 'sfc_POLYGON' or 'sfc_MULTIPOLYGON'.
+#' @param con A PqConnection object.
+#' @param x The object.
+#' @param pool A flag indicating whether to pool databse connection.
+#' @param collect A flag indicating whether to collect dbplyr output into memory.
+#' @param clean A flag indicating whether to select the most useful columns.
+#' @param sf A flag indicating whether to provide output as sf object.
+#' @param table A string of the schema and table name separated by a '.' (e.g., "telemetry.detection")
+#' @param append A flag indicating whether to append data to database table.
+#' @param data A data.frame of the data to write to database.
+#' @param file A string of the file path.
+#' @param tz_data A string of the timezone of the data.
+#' @param station_col A string of the column name with station names.
+#' @param transmitter_id A character vector of transmitter_id.
+#' @param tz A string of the timezone.
+#' @param quiet A flag indicating whether to suppress warnings and messages.
+#' @param dbname A string of the database name.
+#' @param schema A string of the schema name.
+#' @param ... Arguments passed to another function.
+#' @param by A string of the column name to group by.
+
 #' @keywords internal
 #' @name params
 NULL

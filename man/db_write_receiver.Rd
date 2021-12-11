@@ -6,6 +6,11 @@
 \usage{
 db_write_receiver(con, x)
 }
+\arguments{
+\item{con}{A PqConnection object.}
+
+\item{x}{The object.}
+}
 \value{
 The modified database
 }

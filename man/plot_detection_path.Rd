@@ -9,25 +9,29 @@
 plot_detection_path(x, ...)
 
 \method{plot_detection_path}{data.frame}(
-  detection_event,
+  x,
   deployment,
   reference_rkm = reference_rkms(),
   receiver_group = "receiver_group",
   receiver_group_rkm = "receiver_group_rkm",
-  lims_x = range(detection_event$timestep),
-  lims_y = range(detection_event$receiver_group_rkm)
+  lims_x = range(x$timestep),
+  lims_y = range(x$receiver_group_rkm),
+  ...
 )
 
 \method{plot_detection_path}{PqConnection}(
-  con,
-  transmitter_id,
+  x,
+  transmitter_id = "A69-1303-10070",
   max_absence = 96,
   lims_x = c(as.Date("2010-01-01"), as.Date("2020-01-01")),
-  lims_y = c(0, 56)
+  lims_y = c(0, 56),
+  ...
 )
 }
 \arguments{
-\item{detection_event}{A tibble of detection path data returned from \code{wsgcolr::detection_event()}containing columns 'transmitter_id', 'timestep', 'path', 'array', 'array_rkm'.}
+\item{x}{The object.}
+
+\item{...}{Arguments passed to another function.}
 
 \item{deployment}{A tibble of the receiver deployments containing columns 'date_deployment', 'date_last_download', 'station', 'array', 'array_rkm'.}
 
@@ -40,6 +44,8 @@ plot_detection_path(x, ...)
 \item{lims_x}{A vector of class 'Date' containing x-axis limits.}
 
 \item{lims_y}{A vector of the numeric y-axis limits.}
+
+\item{transmitter_id}{A character vector of transmitter_id.}
 
 \item{max_absence}{A number of the maximum hours without detection for new event to occur.}
 }
@@ -62,7 +68,7 @@ Generic function to plot the detection paths.
 \dontrun{
 lims_x = c(min(deployment$date_deployment), max(deployment$date_last_download))
 lims_y = c(0, 56)
-plot_detection_path(detection, deployment, reference_rkm)
+plot_detection_path(detection_event, deployment)
 }
 \dontrun{
 lims_x = c(min(deployment$date_deployment), max(deployment$date_last_download))
