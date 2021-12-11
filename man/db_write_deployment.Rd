@@ -2,13 +2,13 @@
 % Please edit documentation in R/db-write-telemetry.R
 \name{db_write_deployment}
 \alias{db_write_deployment}
-\title{Write deployment csv to db}
+\title{Write deployment to db}
 \usage{
-db_write_deployment(file, con)
+db_write_deployment(con, x)
 }
 \value{
 The modified database
 }
 \description{
-Write deployment csv to db
+Write deployment to db
 }

@@ -4,7 +4,7 @@
 \alias{db_write}
 \title{Write data to database connection}
 \usage{
-db_write(con, table, data, append = TRUE)
+db_write(con, table, data, append = TRUE, ...)
 }
 \value{
 The modified database.

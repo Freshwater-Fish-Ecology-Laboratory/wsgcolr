@@ -4,7 +4,7 @@
 \alias{db_write_transmitter}
 \title{Write transmitter csv file to db}
 \usage{
-db_write_transmitter(file, con)
+db_write_transmitter(con, file)
 }
 \value{
 The modified database

@@ -1,22 +1,41 @@
-write_discharge_poisson <- function(con, file){
-  x <- readr::read_csv(file,
-                       col_types = "Tcccccccnncc")
+#' Write discharge csv queried from Poisson db
+#'
+#' @inheritParams params
+#' @return The modified database
+#'
+#' @export
+db_write_discharge_poisson <- function(con, file, tz_data = "Etc/GMT+8"){
+  x <- readr::read_csv(file)
   
-  chk::check_names(x, c("Date and Time (UTC)", "Receiver", "Transmitter", "Transmitter Name",
-                        "Transmitter Serial", "Sensor Value", "Sensor Unit", "Station Name",
-                        "Longitude", "Transmitter Type", "Sensor Precision"))
+  y <- x %>%
+    transmute(datetime_pst = lubridate::force_tz(DateTime, tzone = tz_data) ,
+              discharge_cms = as.numeric(Corrected),
+              station_id = as.character(Station),
+              estimation_status = as.character(Status)) %>%
+    filter(!is.na(discharge_cms)) %>%
+    filter(!is.na(datetime_pst))
   
-  names(x) <- c('datetime_utc', 'receiver', 'transmitter', 
-                'transmitter_name', 'transmitter_serial', 
-                'sensor_value', 'sensor_unit', 'station_name', 
-                'lat', 'lon', 'transmitter_type', 'sensor_precision')
-  
-  x$file <- basename(file)
-  
-  db_write(con = con, schema = "telemetry", table = "detection", data = x)
+  db_write(con = con, table = "environmental.discharge", data = x)
   
 }
 
-write_discharge_border <- function(con, file){
+#' Write discharge csv from border flows
+#'
+#' @inheritParams params
+#' @return The modified database
+#'
+#' @export
+db_write_discharge_border <- function(con, file, tz_data = "Etc/GMT+8"){
+  x <- readr::read_csv(file)
+  
+  x <- x %>%
+    transmute(datetime_pst = lubridate::force_tz(`Start Date`, tzone = tz_data), 
+              station_id = "US_CAN",
+              discharge_cms = as.numeric(`US Border (CMS)`),
+              estimation_status = NA_character_) %>%
+    filter(!is.na(discharge_cms)) %>%
+    filter(!is.na(datetime_pst))
+  
+  db_write(con = con, table = "environmental.discharge", data = x)
   
 }

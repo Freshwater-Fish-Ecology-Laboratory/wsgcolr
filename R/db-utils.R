@@ -46,3 +46,5 @@ db_connect <- function(dbname = getOption("dbname"), schema = NULL, pool = FALSE
 db_disconnect <- function(conn){
   DBI::dbDisconnect(conn)
 }
+
+

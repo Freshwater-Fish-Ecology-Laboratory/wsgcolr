@@ -27,4 +27,8 @@ Imports:
     ggspatial,
     tidyr,
     lubridate,
-    forcats
+    forcats,
+    purrr,
+    readr,
+    dttr2,
+    dbplyr

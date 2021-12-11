@@ -11,5 +11,7 @@ test_that("plotting funs work", {
   
   wsgcolr::plot_detection_path(con)
   
+  wsgcolr::plot_discharge(con)
+  
   
 })

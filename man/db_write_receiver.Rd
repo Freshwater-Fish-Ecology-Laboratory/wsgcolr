@@ -4,7 +4,7 @@
 \alias{db_write_receiver}
 \title{Write receiver csv to db}
 \usage{
-db_write_receiver(file, con)
+db_write_receiver(con, x)
 }
 \value{
 The modified database
