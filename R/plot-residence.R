@@ -75,13 +75,17 @@ plot_residence_event <- function(x,
 #' x <- residence_proportion_complete(event)
 #' plot_residence(x)
 #' }
-plot_residence_proportion <- function(x, size = 0.3){
+plot_residence_proportion <- function(x, 
+                                      xlab = "Timestep", 
+                                      ylab = "Receiver Group", 
+                                      legend_lab = "Residence\nProportion", size = 0.3){
   
   ggplot(data = x) +
     geom_tile(aes(x = timestep_start, y = receiver_group, 
                   fill = residence_proportion, 
                   color = residence_proportion), size = size) +
     scale_fill_viridis_c() + 
-    scale_colour_viridis_c()
+    scale_colour_viridis_c() +
+    labs(x = xlab, y = ylab, colour = legend_lab, fill = legend_lab)
 }
 
