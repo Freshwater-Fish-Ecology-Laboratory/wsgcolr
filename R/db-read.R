@@ -38,7 +38,8 @@ db_read_station <- function(con, sf = TRUE){
   station %>%
     left_join(receiver_group, "receiver_group") %>%
     mutate(station_name = forcats::fct_rev(forcats::fct_reorder(.data$station_name, .data$rkm)),
-           station_id = forcats::fct_rev(forcats::fct_reorder(.data$station_id, .data$rkm)))
+           station_id = forcats::fct_rev(forcats::fct_reorder(.data$station_id, .data$rkm)),
+           receiver_group = forcats::fct_rev(forcats::fct_reorder(.data$receiver_group, .data$receiver_group_rkm)))
 }
 
 #' Read receiver_group table and add receiver_group_colour
