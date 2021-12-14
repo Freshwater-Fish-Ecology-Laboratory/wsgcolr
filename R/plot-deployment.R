@@ -35,8 +35,9 @@ plot_deployment_spatial <- function(station, river){
 
   ggplot() +
     geom_sf(data = river, lwd = 0.1, color = "black") +
-    geom_sf(data = station, aes(color = receiver_group_colour), show.legend = FALSE) +
-    scale_color_identity() +
+    geom_sf(data = station, aes(color = receiver_group), 
+            show.legend = FALSE) +
+    scale_color_discrete(drop = FALSE) +
     coord_sf(xlim = xlim, ylim = ylim) +
     ggspatial::annotation_scale(height = unit(0.09, "cm"), text_cex = 0.5) +
     theme(axis.text.x = element_blank(),
@@ -67,12 +68,14 @@ plot_deployment_temporal <- function(deployment, detection = NULL, station_col =
 
   gp <-  ggplot(data = deployment) +
     geom_segment(aes(x = date_period_start, y = !! sym(station_col),
-                     xend = date_period_end, yend = !! sym(station_col), color = receiver_group_colour),
+                     xend = date_period_end, yend = !! sym(station_col), 
+                     color = receiver_group),
                  alpha = 1, size = 3.8) +
-    scale_color_identity() +
+    scale_color_discrete(drop = FALSE) +
+    guides(color = guide_legend(reverse = TRUE)) +
     geom_point(aes(x = date_period_start, y = !! sym(station_col)), pch = '|', lwd = 2) +
     geom_point(aes(x = date_period_end, y = !! sym(station_col)), pch = '|', lwd = 2) +
-    labs(x = "Date", y = "Station", color = "Array") +
+    labs(x = "Date", y = "Station", color = "Receiver\nGroup") +
     NULL
 
   if(!is.null(detection)){
