@@ -49,6 +49,7 @@ get_residence_event <- function(detection,
                               path = path,
                               flag = FALSE)) %>%
     ungroup() %>%
+  
     ### filter if more than min_detections per event
     group_by(.data$transmitter, .data$event) %>%
     mutate(ndetections = n(),
@@ -99,14 +100,27 @@ residence_event <- function(detection,
   if(!squash)
     return(x %>% select(-ndetections, -duration_s, -duration, -new_event))
   
-  ### return squashed format
-  x %>%
+  ### get mean rkm weighted by ndetections at stations
+  location <- x %>%
+    group_by(.data$transmitter, .data$event, .data$station_id, 
+             .data$rkm) %>%
+    summarize(ndets = n()) %>%
+    ungroup() %>%
+    group_by(.data$transmitter, .data$event) %>%
+    summarize(mean_rkm = weighted.mean(rkm, ndets)) %>%
+    ungroup()
+  
+  ### get event start/end and join to location by transmitter/event
+  x <- x %>%
     group_by(transmitter, !! sym(receiver_group), event, ndetections, duration_s) %>%
     arrange(!! sym(datetime)) %>%
     summarize(event_start = first(!! sym(datetime)),
               event_end = last(!! sym(datetime))) %>%
     ungroup() %>%
-    arrange(transmitter, event)
+    arrange(transmitter, event) %>%
+    left_join(location, c("transmitter", "event"))
+  
+  x
 }
 
 #' Create detection residence paths
