@@ -19,7 +19,7 @@ plot_residence_event <- function(x,
                                  receiver_group = "receiver_group", 
                                  receiver_group_rkm = "receiver_group_rkm",
                                  lims_x = range(x$event_start), 
-                                 lims_y = levels(x$receiver_group_rkm),
+                                 lims_y = levels(x$mean_rkm),
                                  ...){
   
   # chk_detection_event(detection_event)
@@ -31,8 +31,7 @@ plot_residence_event <- function(x,
   # chk_is(lims_y, "numeric")
   # chk_length(lims_y, 2L)
   
-  gp <- ggplot(data = x, aes(x = !! sym(datetime), 
-                                     y = !! sym(receiver_group_rkm)))
+  gp <- ggplot(data = x, aes(x = !! sym(datetime), mean_rkm))
   
   if(length(deployment))
     gp <- gp + 
@@ -45,12 +44,14 @@ plot_residence_event <- function(x,
       geom_line(data = residence_path, aes(group = event))
   
   gp +
-    geom_segment(aes(color = receiver_group_colour,
-                     x = event_start, xend = event_end,
-                     y = !! sym(receiver_group_rkm), 
-                     yend = !! sym(receiver_group_rkm)), size = 3.5) +
-    scale_color_identity() +
-    labs(x = 'Date', y = 'Rkm', color = "Array") +
+    geom_segment(aes(x = event_start, 
+                     xend = event_end,
+                     y = mean_rkm, 
+                     yend = mean_rkm, 
+                     color = receiver_group), 
+                 size = 3.5) +
+    scale_color_discrete(drop = FALSE) +
+    labs(x = 'Date', y = 'Rkm') +
     coord_cartesian(ylim = lims_y, xlim = lims_x) +
     geom_hline(data = reference_rkm, aes(yintercept = rkm), linetype = 'dotted') +
     geom_text(data = reference_rkm, aes(label = label, x = lims_x[1], y = rkm),
