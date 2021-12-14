@@ -33,6 +33,8 @@
 #' @param schema A string of the schema name.
 #' @param ... Arguments passed to another function.
 #' @param by A string of the column name to group by.
+#' @param datetime A string of the column name containing datetimes.
+#' @param ignore_movement A flag indicating whether to ignore movement between receiver groups when calculating detection events. 
 
 #' @keywords internal
 #' @name params

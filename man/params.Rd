@@ -69,6 +69,10 @@
 \item{...}{Arguments passed to another function.}
 
 \item{by}{A string of the column name to group by.}
+
+\item{datetime}{A string of the column name containing datetimes.}
+
+\item{ignore_movement}{A flag indicating whether to ignore movement between receiver groups when calculating detection events.}
 }
 \description{
 Parameter Descriptions for wsgcolr functions

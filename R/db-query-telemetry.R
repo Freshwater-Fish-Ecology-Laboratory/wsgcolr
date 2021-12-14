@@ -7,6 +7,7 @@
 #'
 #' @export
 db_query_deployment_period <- function(con, collect = TRUE){
+  
   deployment <- db_read(con, "telemetry.deployment", collect = FALSE)
   detection <- db_read(con, "telemetry.detection", collect = FALSE)
   receiver <- db_read(con, "telemetry.receiver", collect = FALSE)
@@ -145,7 +146,8 @@ db_query_detection_tidy <- function(con, clean = TRUE, collect = TRUE){
   
   if(clean){
     x <- x %>%
-      select(.data$transmitter, .data$receiver_group, .data$pittag_id, .data$tag_insertion_date,
+      select(.data$transmitter, .data$receiver_group, .data$datetime_pst,
+             .data$pittag_id, .data$tag_insertion_date,
              .data$forklength_cm, .data$weight_kg, .data$sex, .data$receiver_group_rkm, 
              .data$receiver_group_temp_zone, .data$receiver_group_flow_zone)
     if(collect){
