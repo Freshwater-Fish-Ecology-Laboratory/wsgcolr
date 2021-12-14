@@ -146,7 +146,8 @@ db_query_detection_tidy <- function(con, clean = TRUE, collect = TRUE){
   
   if(clean){
     x <- x %>%
-      select(.data$transmitter, .data$receiver_group, .data$datetime_pst,
+      select(.data$transmitter, .data$station_id, .data$station_name, .data$rkm,
+             .data$receiver_group, .data$datetime_pst,
              .data$pittag_id, .data$tag_insertion_date,
              .data$forklength_cm, .data$weight_kg, .data$sex, .data$receiver_group_rkm, 
              .data$receiver_group_temp_zone, .data$receiver_group_flow_zone)
