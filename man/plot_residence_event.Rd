@@ -8,7 +8,6 @@ plot_residence_event(
   x,
   residence_path = NULL,
   deployment = NULL,
-  reference_rkm = reference_rkms(),
   datetime = "datetime_pst",
   receiver_group = "receiver_group",
   receiver_group_rkm = "receiver_group_rkm",
@@ -21,8 +20,6 @@ plot_residence_event(
 \item{x}{The object.}
 
 \item{deployment}{A tibble of the receiver deployments containing columns 'date_deployment', 'date_last_download', 'station', 'array', 'array_rkm'.}
-
-\item{reference_rkm}{A tibble of reference rkm locations containing columns 'label' and 'rkm'.}
 
 \item{datetime}{A string of the column name containing datetimes.}
 

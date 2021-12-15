@@ -9,6 +9,12 @@ test_that("detection event functions work", {
   # tags <- tags[1:5]
   
   # tags <- c("A69-1303-10063")
+  
+  station <- db_read_station(con, sf = FALSE)
+ deployment <- db_query_deployment_period(con)
+ deployment <- deployment %>%
+   left_join(station, "station_id")
+  
   detection <- db_query_detection_tidy(con, collect = FALSE) %>%
     filter(transmitter %in% tags) %>%
     collect()
@@ -36,80 +42,31 @@ test_that("detection event functions work", {
   # expect_true(sum(x6$event == 1) > sum(x$event == 1))
   
   event <- residence_event(detection, squash = TRUE)
+  tag <- 8
   ## need to add calculation of mean rkm/lat/lon weighted by #detections / station
-  event1 <- event %>% filter(transmitter == tags[5]) %>%
+  event1 <- event %>% filter(transmitter == tags[tag]) %>%
     left_join(receiver_groups, "receiver_group")
   plot_residence_event(event1)
+  
+  ### plot with deployment and path
+  path <- residence_path(detection) %>% 
+    filter(transmitter == tags[tag])
+  plot_residence_event(event1, deployment = deployment, residence_path = path)
   
   res_month <- residence_proportion(event, "month")
   res_week <- residence_proportion(event, "week")
   res_day <- residence_proportion(event, "day")
   res_year <- residence_proportion(event, "year")
-  
   res_cplt <- residence_complete(res_year, "year")
-  
   res_com <- residence_proportion(event, "year", combine_transmitters = TRUE)
   
   plot_residence_proportion(res_com)
   plot_residence_proportion(res_year)
-  plot_residence_proportion(res_cplt)
+  plot_residence_proportion(res_cplt %>% filter(transmitter == tags[5]))
   
   abun <- abundance(event, timestep = "month")
   plot_abundance_proportion(abun)
 
   ### what about if receiver group had no active deployment during timestep period?
-  
-
-  
-  
-  residence <- readRDS("~/onedrive/data/wsgcolr/laurence_scripts/working_databases/Residence_0920.rds")
-  residence2 <- readRDS("~/onedrive/data/wsgcolr/laurence_scripts/working_databases/residence_0919_AllSites.rds")
-  abundance <- readRDS("~/onedrive/data/wsgcolr/laurence_scripts/working_databases/Abundance_0920.rds")
-  movement <- readRDS("~/onedrive/data/wsgcolr/laurence_scripts/working_databases/Movement_0920.rds")
-  
-  x <- residence %>%
-    filter(id == "A69-1303-10065") %>%
-    select(id, yrwk, rkmCh, totalduration, residence_perc)
-  
-  x2 <- residence2 %>%
-    filter(id == "A69-1303-10065") %>%
-    select(id, timestep, residence, site, residence_perc)
-  
-  y <- abundance %>%
-    select(yrwk, rkmCh, abun, abundance)
-  
-  tmp <- x %>%
-    group_split(transmitter, receiver_group, event) %>%
-    purrr::map_df(function(x){
-      timerange <- seq(x$event_start, x$event_end, by = "day") 
-      tibble(timestep = timerange,
-             event = x$event,
-             transmitter = x$transmitter,
-             receiver_group = x$receiver_group,
-             present = 1)
-    }) %>%
-    arrange(transmitter, event, timestep)
-  
-  receiver_groups <- unique(tmp2$receiver_group)
-  tmp2 <- tmp %>%
-    group_split(transmitter) %>%
-    purrr::map_df(function(x){
-      x <- x %>% arrange(timestep)
-      timerange <- seq(first(x$timestep), last(x$timestep), by = "day") 
-      tidyr::complete(x, timestep = timerange,
-                      transmitter, receiver_group = receiver_groups, 
-                      fill = list(present = 0))
-    }) %>%
-    arrange(transmitter, timestep)
-  
-  detection_event %>%
-    arrange(transmitter, timestep, receiver_group) %>%
-    rowwise() %>%
-    tidyr::complete(timestep = seq.Date(as.Date(event_start), as.Date(event_end), 
-                                        by = "week"),
-                    receiver_group, transmitter,
-                    fill = list(present = 0)) %>%
-    select(transmitter, receiver_group, timestep, present)
-  
   
 })

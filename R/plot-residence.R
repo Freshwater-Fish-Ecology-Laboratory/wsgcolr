@@ -1,3 +1,7 @@
+reference_rkms <- function(){
+  tibble::tibble(label = c("HLK Dam", "Kinnaird", "Genelle", "Trail", "Waneta"), rkm = c(0.1, 15, 25, 40, 56))
+}
+
 #' Plot residence event
 #'
 #' Plot resident events of a single transmitter.
@@ -14,12 +18,12 @@
 plot_residence_event <- function(x, 
                                  residence_path = NULL, 
                                  deployment = NULL, 
-                                 reference_rkm = reference_rkms(),
                                  datetime = "datetime_pst",
                                  receiver_group = "receiver_group", 
                                  receiver_group_rkm = "receiver_group_rkm",
                                  xlims = range(x$event_start), 
                                  ylims = levels(x$mean_rkm),
+                                 reference_rkm = reference_rkms(),
                                  ...){
   
   # chk_detection_event(detection_event)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/detection-ratio.R
 \name{detection_complete}
 \alias{detection_complete}
-\title{Calculate detection residence.}
+\title{Get complete detection data (i.e. filling in absent receiver_group/timestep)}
 \usage{
 detection_complete(
   detection_timestep,
@@ -21,6 +21,5 @@ detection_complete(
 A modified tibble of the complete detection data.
 }
 \description{
-Determine detection presence/absence for each transmitter/timestep/receiver group combination
-\code{timestep} should match what was used in \code{detection_timestep}.
+Get complete detection data (i.e. filling in absent receiver_group/timestep)
 }
