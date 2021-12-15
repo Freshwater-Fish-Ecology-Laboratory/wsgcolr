@@ -4,7 +4,13 @@
 \alias{plot_residence_proportion}
 \title{Plot residence proportion as heatmap}
 \usage{
-plot_residence_proportion(x, size = 0.3)
+plot_residence_proportion(
+  x,
+  xlab = "Timestep",
+  ylab = "Receiver Group",
+  legend_lab = "Residence\\nProportion",
+  size = 0.3
+)
 }
 \arguments{
 \item{x}{The object.}
@@ -16,4 +22,11 @@ An object of class 'ggplot'.
 Input data should be output of \code{residence_proportion()} function.
 Residence proportion calculations are derived from residence events
 and specified timestep.
+}
+\examples{
+\dontrun{
+event <- residence_event(detection)
+x <- residence_proportion_complete(event)
+plot_residence(x)
+}
 }

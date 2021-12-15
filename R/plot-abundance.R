@@ -18,6 +18,7 @@ plot_abun <- function(x, xlab, ylab, legend_lab, fill, size){
 #' @return An object of class 'ggplot'.
 #'
 #' @export
+#' @examples
 #' \dontrun{
 #' event <- residence_event(detection)
 #' x <- abundance(event)
@@ -41,6 +42,7 @@ plot_abundance_proportion <- function(x, xlab = "Timestep",
 #' @return An object of class 'ggplot'.
 #'
 #' @export
+#' @examples
 #' \dontrun{
 #' event <- residence_event(detection)
 #' x <- abundance(event)

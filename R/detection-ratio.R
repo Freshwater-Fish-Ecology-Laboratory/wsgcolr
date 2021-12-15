@@ -51,7 +51,8 @@ detection_complete <- function(detection_timestep, timestep = "week", receiver_g
 
 #' Detection ratio data
 #'
-#' Create absolute (i.e., number of fish) and relative (i.e., proportion of fish) detection ratios per timestep/receiver group.
+#' Create absolute (i.e., number of fish) and relative (i.e., proportion of fish) 
+#' detection ratios per timestep/receiver group.
 #'
 #' @inheritParams params
 #' @return A modified tibble of the detection ratios.

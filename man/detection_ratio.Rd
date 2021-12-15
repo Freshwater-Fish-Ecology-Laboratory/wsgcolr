@@ -15,5 +15,6 @@ detection_ratio(detection_complete, receiver_group = "receiver_group")
 A modified tibble of the detection ratios.
 }
 \description{
-Create absolute (i.e., number of fish) and relative (i.e., proportion of fish) detection ratios per timestep/receiver group.
+Create absolute (i.e., number of fish) and relative (i.e., proportion of fish)
+detection ratios per timestep/receiver group.
 }

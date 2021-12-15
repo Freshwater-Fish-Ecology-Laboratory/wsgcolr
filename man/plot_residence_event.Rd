@@ -12,8 +12,8 @@ plot_residence_event(
   datetime = "datetime_pst",
   receiver_group = "receiver_group",
   receiver_group_rkm = "receiver_group_rkm",
-  lims_x = range(x$event_start),
-  lims_y = levels(x$receiver_group_rkm),
+  xlims = range(x$event_start),
+  ylims = levels(x$mean_rkm),
   ...
 )
 }
@@ -38,4 +38,10 @@ An object of class 'ggplot'.
 \description{
 Plot resident events of a single transmitter.
 Optionally provide resident_path as geom_line and deployments as grey geom_segments.
+}
+\examples{
+\dontrun{
+x <- residence_event(detection)
+plot_residence_event(x)
+}
 }
