@@ -55,7 +55,8 @@ db_query_temperature_tidy <- function(con, clean = TRUE, collect = TRUE){
   
   x <- temperature_clean %>%
     left_join(select(station, -.data$insertion), "station_id") %>%
-    left_join(select(receiver_group,  -.data$max_rkm), "receiver_group") 
+    left_join(select(receiver_group,  -.data$max_rkm), "receiver_group") %>%
+    dbplyr::window_order(station_id, datetime_pst)
   
   if(clean){
     x <- x %>%
@@ -71,6 +72,36 @@ db_query_temperature_tidy <- function(con, clean = TRUE, collect = TRUE){
     }
   }
   
+  if(collect)
+    return(collect(x))
+  x
+}
+
+#' Query tidy discharge data using dbplyr SQL
+#' Tidy data includes joins to discharge_station to get flow_zone
+#'
+#' @inheritParams params
+#' @return A tibble of the queried data.
+#'
+#' @export
+db_query_discharge_tidy <- function(con, clean = TRUE, collect = TRUE){
+  discharge <- db_read(con, "environmental.discharge", collect = FALSE)
+  discharge_station <- db_read(con, "environmental.discharge_station", sf = FALSE, collect = FALSE)
+  
+  x <- discharge %>%
+    left_join(discharge_station, "station_id") %>%
+    dbplyr::window_order(station_id, datetime_pst)
+  
+  if(clean){
+    x <- x %>%
+      select(-.data$lon, -.data$lat, -.data$geom)
+    if(collect){
+      return(x %>% 
+               collect() %>%
+               mutate(station_id = forcats::fct_rev(forcats::fct_reorder(.data$station_id, .data$flow_zone))))
+    }
+  }
+
   if(collect)
     return(collect(x))
   x

@@ -13,6 +13,7 @@ plot_residence_event(
   receiver_group_rkm = "receiver_group_rkm",
   xlims = range(x$event_start),
   ylims = levels(x$mean_rkm),
+  reference_rkm = reference_rkms(),
   ...
 )
 }
@@ -26,6 +27,8 @@ plot_residence_event(
 \item{receiver_group}{A character string of the column containing receiver group (e.g., station, zone, array).}
 
 \item{receiver_group_rkm}{A character string of the column containing receiver group rkm.}
+
+\item{reference_rkm}{A tibble of reference rkm locations containing columns 'label' and 'rkm'.}
 
 \item{...}{Arguments passed to another function.}
 }

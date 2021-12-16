@@ -5,16 +5,7 @@
 #'
 #' @export
 db_write_discharge_poisson <- function(con, file, tz_data = "Etc/GMT+8"){
-  x <- readr::read_csv(file)
-  
-  x <- x %>%
-    transmute(datetime_pst = lubridate::force_tz(.data$DateTime, tzone = tz_data) ,
-              discharge_cms = as.numeric(.data$Corrected),
-              station_id = as.character(.data$Station),
-              estimation_status = as.character(.data$Status)) %>%
-    filter(!is.na(.data$discharge_cms)) %>%
-    filter(!is.na(.data$datetime_pst))
-  
+  x <- read_file_discharge_poisson(file)
   db_write(con = con, table = "environmental.discharge", data = x)
   
 }
@@ -26,16 +17,7 @@ db_write_discharge_poisson <- function(con, file, tz_data = "Etc/GMT+8"){
 #'
 #' @export
 db_write_discharge_border <- function(con, file, tz_data = "Etc/GMT+8"){
-  x <- readr::read_csv(file)
-  
-  x <- x %>%
-    transmute(datetime_pst = lubridate::force_tz(lubridate::ymd_hm(.data$`Start Date`), tzone = tz_data), 
-              station_id = "US_CAN",
-              discharge_cms = as.numeric(.data$`US Border (CMS)`),
-              estimation_status = NA_character_) %>%
-    filter(!is.na(.data$discharge_cms)) %>%
-    filter(!is.na(.data$datetime_pst))
-  
+  x <- read_file_discharge_border(file)
   db_write(con = con, table = "environmental.discharge", data = x)
   
 }

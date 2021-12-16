@@ -6,30 +6,7 @@
 #' @export
 db_write_detection <- function(con, file, clean = TRUE){
   
-  col_types <- "Tcccccccnncc"
-  x <- readr::read_csv(file, col_types = col_types)
-  
-  if(clean){
-    chk::check_names(x, c("Date and Time (UTC)", "Receiver", "Transmitter", "Transmitter Name",
-                          "Transmitter Serial", "Sensor Value", "Sensor Unit", "Station Name",
-                          "Latitude", "Longitude", "Transmitter Type", "Sensor Precision"))
-    
-    x <- x %>%
-      rename(datetime_utc = .data$`Date and Time (UTC)`,
-             receiver = .data$Receiver,
-             transmitter = .data$Transmitter,
-             transmitter_name = .data$`Transmitter Name`,
-             transmitter_serial = .data$`Transmitter Serial`,
-             sensor_value = .data$`Sensor Value`,
-             sensor_unit = .data$`Sensor Unit`,
-             station_name = .data$`Station Name`,
-             lat = .data$Latitude,
-             lon = .data$Longitude,
-             transmitter_type = .data$`Transmitter Type`,
-             sensor_precision = .data$`Sensor Precision`)
-  }
-  
-  x$file <- basename(file)
+  x <- read_file_detection(file, clean = clean)
   
   db_write(con = con, table = "telemetry.detection", data = x)
   
