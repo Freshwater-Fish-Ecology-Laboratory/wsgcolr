@@ -10,6 +10,47 @@ event_flag <- function(duration, max_absence, lag_receiver_group, receiver_group
   cumsum(x)
 }
 
+seq_event <- function(start, end, tstep){
+  dtflr <- lubridate::floor_date(start, unit = tstep)
+  seq(dtflr, end, tstep)
+}
+
+convert_tstep <- function(tstep){
+  chk_subset(tstep, c("month", "week", "day", "year"))
+  n <- 1
+  units <- paste0(tstep, "s")
+  
+  if(tstep == "week"){
+    n <- 7
+    units <- "days"
+  }
+  list(n = n,
+       units = units)
+}
+
+tstep_interval <- function(start, end, tstep){
+  x <- seq_event(start, end, tstep)
+  units <- convert_tstep(tstep)
+  lubridate::interval(x, dttr2::dtt_add_units(x, units = units$units, n = units$n))
+}
+
+#' Calculate duration of a timestep
+#' 
+#' @inheritParams params
+#' @return An integer
+#'
+#' @export
+duration_tstep <- function(tstep){
+  units <- convert_tstep(tstep)
+  t <- as.Date("2010-01-01")
+  interv <- lubridate::interval(t, dttr2::dtt_add_units(t, units = units$units, n = units$n))
+  lubridate::time_length(interv)
+}
+  
+duration_interval <- function(x1, x2){
+  lubridate::time_length(lubridate::intersect(x1, x2))
+}
+
 get_residence_event <- function(detection, 
                                 max_absence = 96,
                                 min_detections = 2,
@@ -150,30 +191,6 @@ residence_path <- function(detection,
   
   x %>% select(-ndetections, -duration_s, -duration, -new_event)
   
-}
-
-seq_event <- function(start, end, tstep){
-  dtflr <- lubridate::floor_date(start, unit = tstep)
-  seq(dtflr, end, tstep)
-}
-
-tstep_interval <- function(start, end, tstep){
-  x <- seq_event(start, end, tstep)
-  chk_subset(tstep, c("month", "week", "day", "year"))
-  
-  n <- 1
-  units <- paste0(tstep, "s")
-  
-  if(tstep == "week"){
-    n <- 7
-    units <- "days"
-  }
-  
-  lubridate::interval(x, dttr2::dtt_add_units(x, units = units, n = n))
-}
-
-duration_interval <- function(x1, x2){
-  lubridate::time_length(lubridate::intersect(x1, x2))
 }
 
 #' Create residence proportion within timesteps
