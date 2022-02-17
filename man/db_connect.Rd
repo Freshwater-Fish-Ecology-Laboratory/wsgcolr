@@ -4,14 +4,12 @@
 \alias{db_connect}
 \title{Connect to database}
 \usage{
-db_connect(dbname = getOption("dbname"), schema = NULL, pool = FALSE)
+db_connect(dbname = getOption("dbname"), schema = NULL)
 }
 \arguments{
 \item{dbname}{A string of the database name.}
 
 \item{schema}{A string of the schema name.}
-
-\item{pool}{A flag indicating whether to pool databse connection.}
 }
 \value{
 A PostgreSQL connection object.

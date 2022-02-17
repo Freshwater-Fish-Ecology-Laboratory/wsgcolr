@@ -36,8 +36,6 @@
 
 \item{x}{The object.}
 
-\item{pool}{A flag indicating whether to pool databse connection.}
-
 \item{collect}{A flag indicating whether to collect dbplyr output into memory.}
 
 \item{clean}{A flag indicating whether to select the most useful columns.}

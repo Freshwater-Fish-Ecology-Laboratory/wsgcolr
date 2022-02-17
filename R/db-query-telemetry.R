@@ -58,6 +58,45 @@ db_query_deployment_period <- function(con, collect = TRUE){
   x
 }
 
+#' Query deployment periods using dbplyr SQL
+#'
+#' This uses much simpler logic to get deployment periods. It ignores whether 
+#' battery dead and defines the broadest possible periods just to get location of receiver
+#' - more detailed receiver coverage within each period can be obtained from receiver metadata.
+#' @inheritParams params
+#' @return A tibble of the queried data.
+#'
+#' @export
+db_query_deployment_period2 <- function(con, collect = TRUE){
+  
+  deployment <- db_read(con, "telemetry.deployment", collect = FALSE)
+  receiver <- db_read(con, "telemetry.receiver", collect = FALSE)
+
+  x <- deployment %>%
+    # filter(.data$activity %in% c("deploy", "unknown") | (.data$download | is.na(.data$download))) %>%
+    group_by(.data$station_id, .data$receiver) %>%
+    dbplyr::window_order(.data$date_deployment) %>%
+    summarize(date_period_start = min(.data$date_deployment, na.rm = TRUE),
+              date_period_end = max(.data$date_deployment, na.rm = TRUE), 
+              .groups = c("keep")) %>%
+    ungroup() %>%
+    group_by(.data$station_id) %>%
+    dbplyr::window_order(.data$date_period_start) %>%
+    # if period_end is greater than period_start of the next deployment then change to 
+    # that period_start - fixes e.g. confusion with RKM16.9
+    mutate(date_period_end = if_else(lead(date_period_start, default = as.Date("2030-01-01")) < date_period_end, 
+                                       lead(date_period_start), date_period_end)) %>%
+    ungroup() %>%
+    # get receiver_id not receiver_number
+    left_join(receiver, c("receiver" = "receiver_number")) %>%
+    select(.data$station_id, .data$receiver_id, .data$date_period_start, .data$date_period_end) %>%
+    arrange(.data$station_id, .data$date_period_start) 
+
+  if(collect)
+    return(collect(x))
+  x
+}
+
 #' Query clean detections using dbplyr SQL
 #'
 #' Converts timezone to PST and filters within deployment periods.

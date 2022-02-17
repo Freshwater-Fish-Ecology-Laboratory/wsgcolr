@@ -20,11 +20,10 @@ set_schema <- function(conn, schema) {
 #' @return A PostgreSQL connection object.
 #'
 #' @export
-db_connect <- function(dbname = getOption("dbname"), schema = NULL, pool = FALSE) {
+db_connect <- function(dbname = getOption("dbname"), schema = NULL) {
   
   config <- config::get(dbname)
-  fun <- if(pool) pool::dbPool else DBI::dbConnect
-  con <- fun(
+  con <- DBI::dbConnect(
     RPostgres::Postgres(),
     user = config$user,
     password = config$password,

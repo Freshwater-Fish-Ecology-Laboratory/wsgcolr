@@ -16,7 +16,6 @@
 #' @param river A sf object of the river polygon. Geometry column must inherit class 'sfc_POLYGON' or 'sfc_MULTIPOLYGON'.
 #' @param con A PqConnection object.
 #' @param x The object.
-#' @param pool A flag indicating whether to pool databse connection.
 #' @param collect A flag indicating whether to collect dbplyr output into memory.
 #' @param clean A flag indicating whether to select the most useful columns.
 #' @param sf A flag indicating whether to provide output as sf object.
